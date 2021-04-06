@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:src="@drawable/rectangle"
+        app:tint="@color/colorPrimaryLight" />
+
+
+    <LinearLayout
+        android:id="@+id/infoGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="16dp">
+
+        <TextView
+            android:id="@+id/defTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="def. to or in another country"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center"
+            android:layout_margin="8dp"/>
+
+
+        <TextView
+            android:id="@+id/synTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="syn. overseas;internationally"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center"
+            android:layout_margin="8dp"/>
+
+        <TextView
+            android:id="@+id/ex1Tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="e.x. Louis Armstrong often traveled abroad"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center"
+            android:layout_margin="8dp"/>
+
+
+        <TextView
+            android:id="@+id/ex2Tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="e.x. Living abroad can be an educational experience"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center"
+            android:layout_margin="8dp"/>
+
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

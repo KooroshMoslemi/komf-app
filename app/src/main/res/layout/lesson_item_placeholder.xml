@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
+
+    <com.github.vipulasri.timelineview.TimelineView
+        android:id="@+id/timeline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:markerSize="30dp"
+        app:marker="@drawable/marker_placeholder"
+        app:lineWidth="5dp"
+        app:startLineColor="#dddddd"
+        app:endLineColor="#dddddd" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/lesson_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_vertical"
+        app:cardBackgroundColor="@color/colorGrey50"
+        app:contentPadding="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="5dp"
+                android:background="#dddddd" />
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="5dp"
+                android:background="#dddddd" />
+
+
+
+
+
+            <!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:id="@+id/text_timeline_title"-->
+<!--                android:textColor="@android:color/black"-->
+<!--                tools:text="Order Successfully Completed"/>-->
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

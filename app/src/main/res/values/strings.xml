@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MVP2</string>
+
+    <string-array name="line_type">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+
+</resources>

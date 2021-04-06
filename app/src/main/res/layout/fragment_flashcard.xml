@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+                <variable
+                    name="flashcardViewModel"
+                    type="com.example.mvp2.flashcard.FlashcardViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id="@+id/BtnGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center">
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/ic_baseline_navigate_before"
+                android:contentDescription="prev"
+                app:flashStatus="@{flashcardViewModel.lessonStatus}"
+                android:onClick="@{()->flashcardViewModel.prevVocab()}"/>
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/ic_baseline_cross"
+                android:contentDescription="cross"
+                app:flashStatus="@{flashcardViewModel.lessonStatus}"
+                android:onClick="@{()->flashcardViewModel.crossVocab()}"/>
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/ic_baseline_check"
+                android:contentDescription="check"
+                app:flashStatus="@{flashcardViewModel.lessonStatus}"
+                android:onClick="@{()->flashcardViewModel.checkVocab()}"/>
+
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="40dp"
+                android:background="@drawable/ic_baseline_navigate_next"
+                android:contentDescription="next"
+                app:flashStatus="@{flashcardViewModel.lessonStatus}"
+                android:onClick="@{()->flashcardViewModel.nextVocab()}"/>
+
+        </LinearLayout>
+
+
+
+
+        <FrameLayout
+            android:id="@+id/flashcard"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/BtnGroup"
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{()->flashcardViewModel.switchSide()}">
+
+
+            <FrameLayout
+                android:id="@+id/card_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include android:id="@+id/back_include" layout="@layout/card_back" />
+
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/card_front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <include android:id="@+id/front_include" layout="@layout/card_front" />
+
+            </FrameLayout>
+
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>

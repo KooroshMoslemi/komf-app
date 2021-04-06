@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:src="@drawable/rectangle"
+        app:tint="@color/colorPrimary" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/vocabTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="abroad"
+            android:textColor="@color/white"
+            style="@style/Base.TextAppearance.AppCompat.Display1"
+            android:gravity="center"/>
+
+        <ImageView
+            android:id="@+id/ttsImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_pronounce"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+
+
+</FrameLayout>
