@@ -14,7 +14,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application,val authToken: String) : AndroidViewModel(application) {
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -45,8 +45,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val vocabs = vocabsRepository.vocabs
 
     init {
-        getCourses()
-        refreshDataFromRepository()
+        getCourses(authToken)
+        //refreshDataFromRepository() Todo: Refactor
     }
 
 
@@ -65,11 +65,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun getCourses(){
+    fun getCourses(authToken : String){
         Log.e("HomeViewModel","getting courses")
         viewModelScope.launch {
             try {
-                _courses.value = Network.instance.getPopularCourses().await().asDomainModel()
+                _courses.value = Network.instance.getPopularCourses("Bearer $authToken").await().asDomainModel()
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
 
@@ -101,15 +101,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return HomeViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
+
 
 
 }

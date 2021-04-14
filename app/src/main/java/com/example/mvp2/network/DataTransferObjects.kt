@@ -24,7 +24,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class NetworkPopularCoursesContainer(val courses: List<NetworkPopularCourse>)
+data class NetworkPopularCoursesContainer(val data: List<NetworkPopularCourse>)
 
 @JsonClass(generateAdapter = true)
 data class NetworkQuizContainer(val quiz: NetworkQuiz)
@@ -81,10 +81,14 @@ data class NetworkPopularCourse(
         val courseId : Long,
         @Json(name="title")
         val courseTitle : String,
-        @Json(name="photo_url")
-        val photoUrl : String,
-        @Json(name="status")
-        val availabilityStatus : String
+        @Json(name="description")
+        val courseDescription : String,
+        @Json(name="price")
+        val coursePrice : Float
+//        @Json(name="photo_url")
+//        val photoUrl : String,
+//        @Json(name="status")
+//        val availabilityStatus : String
 )
 
 
@@ -162,22 +166,23 @@ fun NetworkLessonContainer.asDomainModel(): List<Lesson> {
 
 
 fun NetworkPopularCoursesContainer.asDomainModel(): List<Course> {
-    return courses.map {
+    return data.map {
 
-        var status:CourseStatus = CourseStatus.Open
-
-        if(it.availabilityStatus == "restricted"){
-            status = CourseStatus.Restricted
-        }
-        else if (it.availabilityStatus == "not_ready"){
-            status = CourseStatus.NotReady
-        }
+//        var status:CourseStatus = CourseStatus.Open
+//
+//        if(it.availabilityStatus == "restricted"){
+//            status = CourseStatus.Restricted
+//        }
+//        else if (it.availabilityStatus == "not_ready"){
+//            status = CourseStatus.NotReady
+//        }
 
         Course(
                 it.courseId,
                 it.courseTitle,
-                it.photoUrl,
-                status
+                it.courseDescription,
+                "https://i.imgur.com/JI9hOki.jpg",//Todo: update this when course photo is implemented in backened
+                it.coursePrice
         )
     }
 }

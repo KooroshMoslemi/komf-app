@@ -5,8 +5,10 @@ import com.example.mvp2.course.CourseStatus
 data class Course(
         val courseId : Long,
         val courseTitle : String,
+        val courseDescription: String,
         val photoUrl : String,
-        val availabilityStatus : CourseStatus
+        val price : Float
+        //val availabilityStatus : CourseStatus
 )
 
 //val courses : List<Course> = listOf(

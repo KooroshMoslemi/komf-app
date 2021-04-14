@@ -6,6 +6,8 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
+import androidx.annotation.IdRes
+import androidx.navigation.NavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -40,4 +42,8 @@ fun hideBottomNavigationView(view: BottomNavigationView) {
 fun showBottomNavigationView(view: BottomNavigationView) {
     //view.animate().translationY(0f)
     view.visibility = View.VISIBLE
+}
+
+fun NavController.doIfCurrentDestination(@IdRes destination: Int, action: NavController.()-> Unit){
+    if(this.currentDestination?.id == destination){action()}
 }

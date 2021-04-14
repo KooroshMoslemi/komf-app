@@ -17,10 +17,7 @@
 package com.example.mvp2.network
 
 
-import com.example.mvp2.domain.LoginRequest
-import com.example.mvp2.domain.LoginResponse
-import com.example.mvp2.domain.RegisterRequest
-import com.example.mvp2.domain.RegisterResponse
+import com.example.mvp2.domain.*
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
@@ -41,8 +38,15 @@ interface Service {
     @GET("72b7cc84")
     fun getQuiz(): Deferred<NetworkQuizContainer>
 
-    @GET("d083f1e6")
-    fun getPopularCourses(): Deferred<NetworkPopularCoursesContainer>
+    @GET("api/courses")
+    fun verifyToken(
+            @Header("Authorization") authToken: String
+    ): Deferred<VerifyTokenResponse>
+
+    @GET("api/courses")
+    fun getPopularCourses(
+            @Header("Authorization") authToken: String
+    ): Deferred<NetworkPopularCoursesContainer>
 
     @POST("api/login")
     fun login(@Body request: LoginRequest): Deferred<LoginResponse>

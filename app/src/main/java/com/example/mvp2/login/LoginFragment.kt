@@ -14,9 +14,11 @@ import com.example.mvp2.R
 import com.example.mvp2.database.SessionManager
 import com.example.mvp2.databinding.FragmentLoginBinding
 import com.example.mvp2.setup.SetupViewModel
+import com.example.mvp2.utils.doIfCurrentDestination
 import com.example.mvp2.utils.hideBottomNavigationView
 import com.example.mvp2.utils.showBottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.lang.Exception
 
 class LoginFragment : Fragment() {
 
@@ -39,6 +41,8 @@ class LoginFragment : Fragment() {
         hideBottomNavigationView(bottomView)
 
         sessionManager = SessionManager(context!!)
+        viewModel.navigationPolicy(sessionManager.fetchAuthToken()!!)
+
 
         binding.tvRegister.setOnClickListener {
             findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
@@ -53,17 +57,33 @@ class LoginFragment : Fragment() {
         }
 
 
+       viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
+           it.let {
+              navigateToHome(sessionManager.fetchAuthToken()!!)
+           }
+       })
+
+
         viewModel.login.observe(viewLifecycleOwner, Observer { loginResponse->
             loginResponse.let {
                 sessionManager.saveAuthToken(loginResponse.authToken)
 
-                Log.e("LoginFragment",sessionManager.fetchAuthToken()!!)
-                //Todo: Navigate To Home
+                Log.e("LoginFragment",loginResponse.authToken)
+                navigateToHome(loginResponse.authToken)
             }
 
         })
 
 
         return binding.root
+    }
+
+    private fun navigateToHome(authToken:String){
+//        findNavController().doIfCurrentDestination(R.id.homeFragment) {
+//            Log.e("navigateToHome","navigating...")
+//            navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment(authToken))
+//        }
+        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
+        viewModel.doneHomeNavigating()
     }
 }

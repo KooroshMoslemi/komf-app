@@ -8,6 +8,7 @@ import com.example.mvp2.database.SessionManager
 import com.example.mvp2.domain.LoginRequest
 import com.example.mvp2.domain.LoginResponse
 import com.example.mvp2.domain.Quiz
+import com.example.mvp2.domain.VerifyTokenResponse
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
 import com.example.mvp2.network.asDomainModel
@@ -37,6 +38,25 @@ class LoginViewModel : ViewModel() {
 
 
 
+
+    fun navigationPolicy(authToken:String) {
+        authToken.let {
+            coroutineScope.launch {
+                Log.e("VerifyToken",authToken)
+                val statusDeferred = Network.instance.verifyToken("Bearer $authToken")
+                try {
+                    val statusResponse : VerifyTokenResponse = statusDeferred.await()
+                    if (statusResponse.status.equals("success"))
+                        onHomeNavigating()
+                }
+                catch (e: Exception){
+                    Log.e("Error1",e.message.toString())
+                }
+            }
+        }
+    }
+
+
     fun Login(email:String,password:String){
         coroutineScope.launch {
             val loginDeferred = Network.instance.login(LoginRequest(email,password))
@@ -46,7 +66,7 @@ class LoginViewModel : ViewModel() {
                 _status.value = ApiStatus.DONE
             }
             catch (e: Exception){
-                Log.e("Error",e.message.toString())
+                Log.e("Error2",e.message.toString())
                 _login.value = null
                 _status.value = ApiStatus.ERROR
             }
