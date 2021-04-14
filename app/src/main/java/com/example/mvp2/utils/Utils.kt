@@ -5,6 +5,7 @@ import android.text.Spannable
 
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -32,9 +33,11 @@ fun makeSpannable(text: String?, regex: String?, startTag: String, endTag: Strin
 
 
 fun hideBottomNavigationView(view: BottomNavigationView) {
-    view.animate().translationY(view.height.toFloat())
+    //view.animate().translationY(view.height.toFloat())
+    view.visibility = View.GONE
 }
 
 fun showBottomNavigationView(view: BottomNavigationView) {
-    view.animate().translationY(0f)
+    //view.animate().translationY(0f)
+    view.visibility = View.VISIBLE
 }

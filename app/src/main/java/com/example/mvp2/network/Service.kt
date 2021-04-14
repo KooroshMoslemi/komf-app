@@ -16,11 +16,17 @@
 
 package com.example.mvp2.network
 
+
+import com.example.mvp2.domain.LoginRequest
+import com.example.mvp2.domain.LoginResponse
+import com.example.mvp2.domain.RegisterRequest
+import com.example.mvp2.domain.RegisterResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
+import retrofit2.http.*
 
 
 enum class ApiStatus { LOADING, ERROR, DONE }
@@ -28,21 +34,47 @@ enum class ApiStatus { LOADING, ERROR, DONE }
 interface Service {
     @GET("ffacbda3")
     fun getVocabs(): Deferred<NetworkVocabContainer>
+
     @GET("f96d8aba")
     fun getLessons(): Deferred<NetworkLessonContainer>
+
     @GET("72b7cc84")
     fun getQuiz(): Deferred<NetworkQuizContainer>
+
     @GET("d083f1e6")
     fun getPopularCourses(): Deferred<NetworkPopularCoursesContainer>
+
+    @POST("api/login")
+    fun login(@Body request: LoginRequest): Deferred<LoginResponse>
+
+    @POST("api/register")
+    fun register(@Body request: RegisterRequest): Deferred<RegisterResponse>
+
+//
+//    @Headers("Accept: application/json")
+//    @POST("api/login")
+//    fun login(
+//            @Header("Authorization") authToken: String,
+//            @Body request: LoginRequest
+//    ): Deferred<LoginResponse>
 }
 
 object Network {
 
+
+    var httpClient = OkHttpClient.Builder().addInterceptor { chain ->
+        chain.proceed(
+                chain.request().newBuilder().addHeader("Accept","application/json").build()
+        )
+    }
+
     // Configure retrofit to parse JSON and use coroutines
     private val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.mocki.io/v1/")
+            //.baseUrl("https://api.mocki.io/v1/")
+            .baseUrl("https://api.komf.ir/")
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .client(httpClient.build())
             .build()
 
     val instance = retrofit.create(Service::class.java)
