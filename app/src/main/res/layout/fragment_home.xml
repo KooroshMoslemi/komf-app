@@ -149,16 +149,16 @@
                             style="@style/viewParent.headerText"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
-                            android:text="Popular Courses" />
+                            android:text="My Courses" />
 
-                        <TextView
-                            style="@style/viewParent"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:text="See All"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            style="@style/viewParent"-->
+<!--                            android:layout_alignParentRight="true"-->
+<!--                            android:layout_centerVertical="true"-->
+<!--                            android:text="See All"-->
+<!--                            android:textColor="@color/colorPrimary"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:textStyle="bold" />-->
 
                     </RelativeLayout>
 

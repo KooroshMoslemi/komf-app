@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.example.mvp2.R
+import com.example.mvp2.course.CourseEnrollmentBottomSheet
 import com.example.mvp2.course.CourseViewPagerAdapter
 import com.example.mvp2.database.SessionManager
 import com.example.mvp2.databinding.FragmentHomeBinding
@@ -44,6 +45,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var coursePagerAdapter : CourseViewPagerAdapter
     private lateinit var viewModel : HomeViewModel
+    private lateinit var sessionManager: SessionManager
 
 
     override fun onCreateView(
@@ -59,7 +61,7 @@ class HomeFragment : Fragment() {
         )
 
         val application = requireNotNull(this.activity).application
-        val sessionManager = SessionManager(context!!)
+        sessionManager = SessionManager(context!!)
         val viewModelFactory = HomeViewModelFactory(application, sessionManager.fetchAuthToken()!!)
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
@@ -95,10 +97,9 @@ class HomeFragment : Fragment() {
         val bottomView : BottomNavigationView = activity!!.findViewById(R.id.bottomNavigationView)
         showBottomNavigationView(bottomView)
 
-        coursePagerAdapter = CourseViewPagerAdapter(CourseViewPagerAdapter.OnClickListener{
-            //Toast.makeText(activity,it.courseId.toString(),Toast.LENGTH_SHORT).show()
-            Log.e("HomeFragment",it.courseId.toString())
-            //Todo: Implement Course Enrollment + Description
+        coursePagerAdapter = CourseViewPagerAdapter(CourseViewPagerAdapter.OnClickListener{course->
+            Toast.makeText(activity,course.courseId.toString(),Toast.LENGTH_SHORT).show()
+            //Todo: Navigate To Course Lessons
         })
 
         setupViewpager(coursePagerAdapter)

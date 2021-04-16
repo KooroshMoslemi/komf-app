@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class VerifyTokenResponse(
+data class GeneralResponse(
         @Json(name = "status")
         var status: String
 )

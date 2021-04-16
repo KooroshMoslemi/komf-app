@@ -1,7 +1,10 @@
 package com.example.mvp2.domain
 
+import android.os.Parcelable
 import com.example.mvp2.course.CourseStatus
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Course(
         val courseId : Long,
         val courseTitle : String,
@@ -9,7 +12,7 @@ data class Course(
         val photoUrl : String,
         val price : Float
         //val availabilityStatus : CourseStatus
-)
+):Parcelable
 
 //val courses : List<Course> = listOf(
 //        Course(1,"Barrons - Essential Words for TOEFL" , "https://i.imgur.com/JI9hOki.jpg", CourseStatus.Open),

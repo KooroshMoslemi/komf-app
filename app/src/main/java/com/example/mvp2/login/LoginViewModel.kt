@@ -4,14 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mvp2.database.SessionManager
 import com.example.mvp2.domain.LoginRequest
 import com.example.mvp2.domain.LoginResponse
-import com.example.mvp2.domain.Quiz
-import com.example.mvp2.domain.VerifyTokenResponse
+import com.example.mvp2.domain.GeneralResponse
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
-import com.example.mvp2.network.asDomainModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -45,7 +42,7 @@ class LoginViewModel : ViewModel() {
                 Log.e("VerifyToken",authToken)
                 val statusDeferred = Network.instance.verifyToken("Bearer $authToken")
                 try {
-                    val statusResponse : VerifyTokenResponse = statusDeferred.await()
+                    val statusResponse : GeneralResponse = statusDeferred.await()
                     if (statusResponse.status.equals("success"))
                         onHomeNavigating()
                 }

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.mvp2.database.getDatabase
 import com.example.mvp2.domain.Course
+import com.example.mvp2.domain.GeneralResponse
 import com.example.mvp2.network.Network
 import com.example.mvp2.network.asDomainModel
 import com.example.mvp2.repository.VocabsRepository
@@ -66,10 +67,10 @@ class HomeViewModel(application: Application,val authToken: String) : AndroidVie
     }
 
     fun getCourses(authToken : String){
-        Log.e("HomeViewModel","getting courses")
+        //Log.e("HomeViewModel","getting courses")
         viewModelScope.launch {
             try {
-                _courses.value = Network.instance.getPopularCourses("Bearer $authToken").await().asDomainModel()
+                _courses.value = Network.instance.getMyCourses("Bearer $authToken").await().asDomainModel()
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
 
@@ -80,6 +81,7 @@ class HomeViewModel(application: Application,val authToken: String) : AndroidVie
             }
         }
     }
+
 
 
     fun onNetworkErrorShown() {

@@ -24,12 +24,15 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.mvp2.R
+import com.example.mvp2.domain.Course
 import com.example.mvp2.domain.Vocab
 import com.example.mvp2.lesson.LessonStatus
 import com.example.mvp2.network.ApiStatus
+import com.example.mvp2.search.SearchCourseAdapter
 
 /**
  * Binding adapter used to hide the spinner once data is available.
@@ -58,6 +61,13 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
                 .error(R.drawable.ic_broken_image))
             .into(imgView)
     }
+}
+
+@BindingAdapter("listData")
+fun bindRecyclerView(recyclerView: RecyclerView,
+                     data: List<Course>?) {
+    val adapter = recyclerView.adapter as SearchCourseAdapter
+    adapter.submitList(data)
 }
 
 

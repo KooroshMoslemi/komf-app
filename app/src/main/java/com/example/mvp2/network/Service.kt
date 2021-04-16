@@ -41,18 +41,29 @@ interface Service {
     @GET("api/courses")
     fun verifyToken(
             @Header("Authorization") authToken: String
-    ): Deferred<VerifyTokenResponse>
+    ): Deferred<GeneralResponse>
+
+    @GET("api/user/courses")
+    fun getMyCourses(
+            @Header("Authorization") authToken: String
+    ): Deferred<NetworkCoursesContainer>
 
     @GET("api/courses")
-    fun getPopularCourses(
+    fun getAllCourses(
             @Header("Authorization") authToken: String
-    ): Deferred<NetworkPopularCoursesContainer>
+    ): Deferred<NetworkCoursesContainer>
 
     @POST("api/login")
     fun login(@Body request: LoginRequest): Deferred<LoginResponse>
 
     @POST("api/register")
     fun register(@Body request: RegisterRequest): Deferred<RegisterResponse>
+
+    @POST("api/courses/add/{course_id}")
+    fun enroll(
+            @Header("Authorization") authToken: String,
+            @Path("course_id") courseId: Long
+    ): Deferred<GeneralResponse>
 
 //
 //    @Headers("Accept: application/json")

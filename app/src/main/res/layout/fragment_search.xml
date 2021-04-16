@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.mvp2.search.SearchViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/greetingTv"
+                style="@style/viewParent.headerText"
+                android:text="All Courses" />
+
+            <EditText
+                android:id="@+id/edt_search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:digits="0,1,2,3,4,5,6,7,8,9,*,qwertzuiopasdfghjklyxcvbnm"
+
+                android:maxLines="1"
+                android:singleLine="true"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp"
+
+                android:background="@drawable/container_search"
+                android:drawableStart="@drawable/ic_search_black_24dp"
+
+
+
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/bariol_regular"
+
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="10dp"
+
+                android:hint="Search Here"
+                android:textColorHint="#4c4c4c"
+                android:textColor="@color/colorPrimaryDark"
+
+                android:textSize="14sp">
+
+            </EditText>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/courses_list"
+                android:layout_width="match_parent"
+                android:layout_height="550dp"
+                android:padding="6dp"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                app:layoutManager=
+                    "androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="16"
+                tools:listitem="@layout/course_item"
+                app:listData="@{viewModel.courses}"/>
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

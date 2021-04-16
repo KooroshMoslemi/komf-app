@@ -16,7 +16,6 @@
 
 package com.example.mvp2.network
 
-import com.example.mvp2.course.CourseStatus
 import com.example.mvp2.database.DatabaseVocab
 import com.example.mvp2.domain.*
 import com.example.mvp2.lesson.LessonStatus
@@ -24,7 +23,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class NetworkPopularCoursesContainer(val data: List<NetworkPopularCourse>)
+data class NetworkCoursesContainer(val data: List<NetworkCourse>)
 
 @JsonClass(generateAdapter = true)
 data class NetworkQuizContainer(val quiz: NetworkQuiz)
@@ -76,7 +75,7 @@ data class NetworkVocab(
 
 
 @JsonClass(generateAdapter = true)
-data class NetworkPopularCourse(
+data class NetworkCourse(
         @Json(name="id")
         val courseId : Long,
         @Json(name="title")
@@ -165,7 +164,7 @@ fun NetworkLessonContainer.asDomainModel(): List<Lesson> {
 }
 
 
-fun NetworkPopularCoursesContainer.asDomainModel(): List<Course> {
+fun NetworkCoursesContainer.asDomainModel(): List<Course> {
     return data.map {
 
 //        var status:CourseStatus = CourseStatus.Open
