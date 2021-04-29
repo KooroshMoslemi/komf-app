@@ -14,7 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class LessonViewModel : ViewModel(){
+class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
@@ -27,14 +27,15 @@ class LessonViewModel : ViewModel(){
         get() = _status
 
     init {
-        getLessons()
+        getLessons(authToken,courseId)
     }
 
 
-    private fun getLessons(){
+    private fun getLessons(authToken:String, courseId:Long){
         coroutineScope.launch {
-            var lessonsDeferred = Network.instance.getLessons()
+            var lessonsDeferred = Network.instance.getLessons("Bearer $authToken",courseId)
             try {
+                //Todo: automatically navigate back to home when lessons are empty
                 val results = lessonsDeferred.await().asDomainModel()
                 _status.value = ApiStatus.DONE
                 _lessons.value = results

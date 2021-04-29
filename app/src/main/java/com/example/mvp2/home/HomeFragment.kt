@@ -87,8 +87,9 @@ class HomeFragment : Fragment() {
 
         viewModel.navigateToLesson.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                this.findNavController()
-                    .navigate(HomeFragmentDirections.actionHomeFragmentToLessonFragment())
+                //Todo: pass current course id when api is ready
+//                this.findNavController()
+//                    .navigate(HomeFragmentDirections.actionHomeFragmentToLessonFragment())
                 viewModel.doneLessonNavigating()
             }
         })
@@ -100,6 +101,9 @@ class HomeFragment : Fragment() {
         coursePagerAdapter = CourseViewPagerAdapter(CourseViewPagerAdapter.OnClickListener{course->
             Toast.makeText(activity,course.courseId.toString(),Toast.LENGTH_SHORT).show()
             //Todo: Navigate To Course Lessons
+            this.findNavController()
+                    .navigate(HomeFragmentDirections.actionHomeFragmentToLessonFragment(course.courseId))
+            viewModel.doneLessonNavigating()
         })
 
         setupViewpager(coursePagerAdapter)

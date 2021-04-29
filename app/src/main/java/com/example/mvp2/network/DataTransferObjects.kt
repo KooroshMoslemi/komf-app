@@ -33,7 +33,7 @@ data class NetworkVocabContainer(val vocabs: List<NetworkVocab>)
 
 
 @JsonClass(generateAdapter = true)
-data class NetworkLessonContainer(val lessons: List<NetworkLesson>)
+data class NetworkLessonContainer(val data: List<NetworkLesson>)
 
 
 @JsonClass(generateAdapter = true)
@@ -93,15 +93,16 @@ data class NetworkCourse(
 
 @JsonClass(generateAdapter = true)
 data class NetworkLesson(
-    @Json(name="lesson_id")
+    @Json(name="id")
     val lessonId:Long,
-    @Json(name="lesson_title")
+    @Json(name="title")
     val lessonTitle:String,
-    val progress:Int,
-    @Json(name="total_words")
-    val totalWords:String,
-    @Json(name="word_ids")
-    val wordIds:List<Long>
+    @Json(name="prgress")
+    val progress:Int
+//    @Json(name="total_words")
+//    val totalWords:String,
+//    @Json(name="word_ids")
+//    val wordIds:List<Long>
 )
 
 
@@ -142,23 +143,23 @@ fun NetworkVocabContainer.asDatabaseModel(): List<DatabaseVocab> {
 
 
 fun NetworkLessonContainer.asDomainModel(): List<Lesson> {
-    return lessons.map {
+    return data.map {
 
         var status:LessonStatus = LessonStatus.ACTIVE
 
         if(it.progress == 100){
             status = LessonStatus.COMPLETED
         }
-        else if (it.progress == 0){
-            status = LessonStatus.INACTIVE
-        }
+//        else if (it.progress == 0){
+//            status = LessonStatus.INACTIVE
+//        }
 
         Lesson(
             lessonId = it.lessonId,
             lessonTitle = it.lessonTitle,
             lessonProgress = it.progress,
             lessonStatus = status,
-            remainedVocabIds = it.wordIds
+            remainedVocabIds = ArrayList() //Todo: remove this later when all the dependencies are fixed!
         )
     }
 }

@@ -14,8 +14,8 @@
         android:layout_height="match_parent"
         app:markerSize="30dp"
         app:lineWidth="5dp"
-        app:startLineColor="@color/colorPrimaryLight"
-        app:endLineColor="@color/colorPrimaryLight"
+        app:startLineColor="@color/colorPrimary"
+        app:endLineColor="@color/colorPrimary"
         />
 
     <com.google.android.material.card.MaterialCardView
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/lesson_title"
-                android:textColor="@color/colorPrimaryLight"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 tools:text="Lesson 1"/>
 

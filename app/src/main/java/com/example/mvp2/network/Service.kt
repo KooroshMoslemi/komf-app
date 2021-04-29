@@ -32,8 +32,11 @@ interface Service {
     @GET("ffacbda3")
     fun getVocabs(): Deferred<NetworkVocabContainer>
 
-    @GET("f96d8aba")
-    fun getLessons(): Deferred<NetworkLessonContainer>
+    @GET("/api/courses/{course_id}/lessons")
+    fun getLessons(
+            @Header("Authorization") authToken: String,
+            @Path("course_id") courseId: Long
+    ): Deferred<NetworkLessonContainer>
 
     @GET("72b7cc84")
     fun getQuiz(): Deferred<NetworkQuizContainer>

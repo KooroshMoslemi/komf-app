@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_lessonFragment_to_flashcardFragment"
             app:destination="@id/flashcardFragment" />
+        <argument
+            android:name="courseId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/flashcardFragment"
