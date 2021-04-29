@@ -29,6 +29,11 @@ class SearchViewModel(authToken: String) : ViewModel(){
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
 
+
+    private var _hasUserAlreadyEnrolledCourse = MutableLiveData<Boolean>()
+    val hasUserAlreadyEnrolledCourse: LiveData<Boolean>
+        get() = _hasUserAlreadyEnrolledCourse
+
     private val _courses = MutableLiveData<List<Course>>()
     val courses : LiveData<List<Course>> get() = _courses
 
@@ -41,7 +46,7 @@ class SearchViewModel(authToken: String) : ViewModel(){
     }
 
 
-    fun getCourses(authToken: String){
+    private fun getCourses(authToken: String){
         coroutineScope.launch {
             var coursesDeferred = Network.instance.getAllCourses("Bearer $authToken")
             try {
@@ -69,9 +74,42 @@ class SearchViewModel(authToken: String) : ViewModel(){
                 _isNetworkErrorShown.value = false
 
             } catch (networkError: IOException) {
-                if(courses.value.isNullOrEmpty())
-                    Log.e("error",networkError.message.toString())
+                Log.e("error",networkError.message.toString())
                 _eventNetworkError.value = true
+            }
+        }
+    }
+
+
+    fun unrollCourse(authToken: String , courseId:Long) {
+        coroutineScope.launch {
+            try {
+                val response : GeneralResponse = Network.instance.unroll("Bearer $authToken",courseId).await()
+                if (response.status == "success"){
+                    Log.e("HomeViewModel","unroll succeed $courseId")
+                }
+                _eventNetworkError.value = false
+                _isNetworkErrorShown.value = false
+
+            } catch (networkError: IOException) {
+                Log.e("error",networkError.message.toString())
+                _eventNetworkError.value = true
+            }
+        }
+    }
+
+
+    fun hasUserEnrolledCourseBefore(authToken: String,courseId: Long){
+        coroutineScope.launch {
+            try {
+                val courses : List<Long> = Network.instance.getMyCourses("Bearer $authToken").await().asDomainModel().map {
+                    it.courseId
+                }
+
+                _hasUserAlreadyEnrolledCourse.value = courses.contains(courseId)
+
+            } catch (networkError: IOException) {
+                _hasUserAlreadyEnrolledCourse.value = null
             }
         }
     }

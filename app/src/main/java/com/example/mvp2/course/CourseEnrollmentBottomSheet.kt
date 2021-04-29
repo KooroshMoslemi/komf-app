@@ -26,9 +26,11 @@ class CourseEnrollmentBottomSheet : RoundedCornerBottomSheet() {
     companion object {
 
         private const val COURSE_BUNDLE = "COURSE_BUNDLE"
+        private var _unrollMode : Boolean = false
 
-        fun showDialog(fragmentManager: FragmentManager, course: Course, callbacks: Callbacks) {
+        fun showDialog(fragmentManager: FragmentManager, course: Course, callbacks: Callbacks , unrollMode : Boolean = false) {
             val dialog = CourseEnrollmentBottomSheet()
+            _unrollMode = unrollMode
             dialog.arguments = bundleOf(
                     COURSE_BUNDLE to course
             )
@@ -72,6 +74,9 @@ class CourseEnrollmentBottomSheet : RoundedCornerBottomSheet() {
         val course = (arguments!!.getParcelable<Course>(COURSE_BUNDLE))
         course_title.text = course?.courseTitle
         course_description.text = course?.courseDescription
+
+        if(_unrollMode)
+            button_enroll.text = "Unroll"
 
         button_enroll.setOnClickListener {
             mCallbacks?.onStateChanged(course!!.courseId)

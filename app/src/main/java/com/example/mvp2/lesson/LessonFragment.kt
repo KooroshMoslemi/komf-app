@@ -75,10 +75,10 @@ class LessonFragment : Fragment() {
         })
 
 
-        viewModel.navigateToFlashCard.observe(viewLifecycleOwner, Observer { vocabs->
-            viewModel.lessonVocabs.value.let { vocabs->
-                //Todo: navigate to Flashcards
-                if(!vocabs.isNullOrEmpty() && selectedLessonStatus != LessonStatus.INACTIVE){
+        viewModel.navigateToFlashCard.observe(viewLifecycleOwner, Observer {
+            viewModel.lessonVocabs.value?.let { vocabs->
+
+                if(selectedLessonStatus != LessonStatus.INACTIVE){ //!vocabs.isNullOrEmpty() && //Todo: check this if again
                     findNavController().navigate(
                             LessonFragmentDirections.actionLessonFragmentToFlashcardFragment(
                                     VocabList(

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.mvp2.R
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.mvp2.course.CourseEnrollmentBottomSheet
 import com.example.mvp2.database.SessionManager
 import com.example.mvp2.databinding.FragmentSearchBinding
+import com.example.mvp2.domain.Course
 import com.example.mvp2.login.LoginViewModel
 import com.example.mvp2.quiz.QuizViewModel
 import com.example.mvp2.utils.hideBottomNavigationView
@@ -27,6 +29,7 @@ class SearchFragment : Fragment() {
 
 
     private lateinit var sessionManager: SessionManager
+    private var selectedCourse : Course? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(
@@ -39,15 +42,33 @@ class SearchFragment : Fragment() {
         sessionManager = SessionManager(context!!)
         val viewModelFactory = SearchViewModelFactory(sessionManager.fetchAuthToken()!!)
         val viewModel = ViewModelProvider(this,viewModelFactory).get(SearchViewModel::class.java)
+
+
         val coursesAdapter = SearchCourseAdapter(SearchCourseAdapter.OnClickListener{ course->
 
-            CourseEnrollmentBottomSheet.showDialog(fragmentManager!!,course, object : CourseEnrollmentBottomSheet.Callbacks{
-                override fun onStateChanged(courseId: Long) {
-                    Log.e("SearchFragment",courseId.toString())
-                    viewModel.enrollCourse(sessionManager.fetchAuthToken()!!,courseId)
-                }
-            })
+            selectedCourse = course
+            viewModel.hasUserEnrolledCourseBefore(sessionManager.fetchAuthToken()!!,course.courseId)
 
+        })
+
+        viewModel.hasUserAlreadyEnrolledCourse.observe(viewLifecycleOwner, Observer { userAlreadyEnrolled->
+            userAlreadyEnrolled?.let { alreadyEnrolled->
+                Log.e("SearchFragment","user already enroll: $alreadyEnrolled")
+                selectedCourse?.let { selectedCourse->
+
+                    CourseEnrollmentBottomSheet.showDialog(fragmentManager!!,selectedCourse, object : CourseEnrollmentBottomSheet.Callbacks{
+                        override fun onStateChanged(courseId: Long) {
+                            Log.e("SearchFragment",courseId.toString())
+
+                            if(alreadyEnrolled)
+                                viewModel.unrollCourse(sessionManager.fetchAuthToken()!!,courseId)
+                            else
+                                viewModel.enrollCourse(sessionManager.fetchAuthToken()!!,courseId)
+                        }
+                    },alreadyEnrolled)
+
+                }
+            }
         })
 
         binding.edtSearch.addTextChangedListener(object : TextWatcher{

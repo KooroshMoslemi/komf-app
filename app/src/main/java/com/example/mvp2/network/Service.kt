@@ -76,6 +76,12 @@ interface Service {
             @Path("course_id") courseId: Long
     ): Deferred<GeneralResponse>
 
+    @POST("api/courses/remove/{course_id}")
+    fun unroll(
+            @Header("Authorization") authToken: String,
+            @Path("course_id") courseId: Long
+    ): Deferred<GeneralResponse>
+
 //
 //    @Headers("Accept: application/json")
 //    @POST("api/login")
