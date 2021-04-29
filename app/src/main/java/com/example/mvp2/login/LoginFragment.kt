@@ -41,7 +41,11 @@ class LoginFragment : Fragment() {
         hideBottomNavigationView(bottomView)
 
         sessionManager = SessionManager(context!!)
-        viewModel.navigationPolicy(sessionManager.fetchAuthToken()!!)
+
+        sessionManager.fetchAuthToken().let {
+            if(!it.isNullOrEmpty()) viewModel.navigationPolicy(it)
+        }
+
 
 
         binding.tvRegister.setOnClickListener {

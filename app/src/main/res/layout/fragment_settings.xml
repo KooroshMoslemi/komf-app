@@ -67,9 +67,9 @@
 
             <TextView
                 style="@style/viewParent.headerText.settingsTextIcon"
-                android:drawableLeft="@drawable/ic_edit_password"
                 android:layout_marginTop="10dp"
-                android:text="Change Password" />
+                android:text="Change Password"
+                app:drawableLeftCompat="@drawable/ic_edit_password" />
 
             <TextView
                 style="@style/viewParent.headerText.settingsMiniTitle"
@@ -87,9 +87,10 @@
 
 
             <TextView
+                android:id="@+id/tvLogout"
                 style="@style/viewParent.headerText.settingsTextIcon"
-                android:drawableLeft="@drawable/ic_logout"
-                android:text="Logout" />
+                android:text="Logout"
+                app:drawableLeftCompat="@drawable/ic_logout" />
 
 
         </LinearLayout>

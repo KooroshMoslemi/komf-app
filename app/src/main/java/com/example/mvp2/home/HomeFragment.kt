@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
 
         viewModel.courses.observe(viewLifecycleOwner, Observer {
             it.let {
-                Log.e("HomeFragment","popular courses updated!")
+                Log.e("HomeFragment","user courses updated!")
                 coursePagerAdapter.submitList(it)
             }
         })

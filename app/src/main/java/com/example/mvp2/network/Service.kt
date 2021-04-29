@@ -56,6 +56,11 @@ interface Service {
     @POST("api/login")
     fun login(@Body request: LoginRequest): Deferred<LoginResponse>
 
+    @POST("api/logout")
+    fun logout(
+            @Header("Authorization") authToken: String
+    ): Deferred<GeneralResponse>
+
     @POST("api/register")
     fun register(@Body request: RegisterRequest): Deferred<RegisterResponse>
 
