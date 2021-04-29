@@ -29,10 +29,13 @@ import retrofit2.http.*
 enum class ApiStatus { LOADING, ERROR, DONE }
 
 interface Service {
-    @GET("ffacbda3")
-    fun getVocabs(): Deferred<NetworkVocabContainer>
+    @GET("api/lessons/{lessons_id}/vocabs")
+    fun getVocabs(
+            @Header("Authorization") authToken: String,
+            @Path("lessons_id") lessonId: Long
+    ): Deferred<NetworkVocabContainer>
 
-    @GET("/api/courses/{course_id}/lessons")
+    @GET("api/courses/{course_id}/lessons")
     fun getLessons(
             @Header("Authorization") authToken: String,
             @Path("course_id") courseId: Long

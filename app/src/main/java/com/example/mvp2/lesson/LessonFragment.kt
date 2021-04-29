@@ -1,6 +1,7 @@
 package com.example.mvp2.lesson
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvp2.R
 import com.example.mvp2.database.SessionManager
 import com.example.mvp2.databinding.FragmentLessonBinding
+import com.example.mvp2.domain.Vocab
+import com.example.mvp2.domain.VocabList
 import com.example.mvp2.flashcard.FlashcardFragmentArgs
 import com.example.mvp2.home.HomeViewModel
 import com.example.mvp2.home.HomeViewModelFactory
@@ -29,6 +33,7 @@ class LessonFragment : Fragment() {
     private lateinit var mAdapter: LessonAdapter
     private lateinit var viewModel: LessonViewModel
     private lateinit var sessionManager: SessionManager
+    private var selectedLessonStatus : LessonStatus = LessonStatus.INACTIVE
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,11 +62,30 @@ class LessonFragment : Fragment() {
         viewModel.lessons.observe(viewLifecycleOwner, Observer{ lessons->
             if (lessons.isNotEmpty())
             {
-                mAdapter = LessonAdapter(lessons)
+                mAdapter = LessonAdapter(lessons,LessonAdapter.OnClickListener{
+                    Log.e("LessonFragment","lesson item clicked!")
+                    selectedLessonStatus = it.lessonStatus
+                    viewModel.getVocabs(sessionManager.fetchAuthToken()!!,it.lessonId)
+                })
                 binding.shimmerViewContainer.stopShimmer()
                 binding.shimmerViewContainer.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
                 binding.recyclerView.adapter = mAdapter
+            }
+        })
+
+
+        viewModel.navigateToFlashCard.observe(viewLifecycleOwner, Observer { vocabs->
+            viewModel.lessonVocabs.value.let { vocabs->
+                //Todo: navigate to Flashcards
+                if(!vocabs.isNullOrEmpty() && selectedLessonStatus != LessonStatus.INACTIVE){
+                    findNavController().navigate(
+                            LessonFragmentDirections.actionLessonFragmentToFlashcardFragment(
+                                    VocabList(
+                                            vocabs as ArrayList<Vocab>,
+                                            selectedLessonStatus)))
+                    viewModel.doneFlashCardNavigating()
+                }
             }
         })
 

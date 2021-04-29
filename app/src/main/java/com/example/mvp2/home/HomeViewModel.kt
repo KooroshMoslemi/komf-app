@@ -32,7 +32,6 @@ class HomeViewModel(application: Application,val authToken: String) : AndroidVie
 
 
     private val _navigateToLesson = MutableLiveData<Boolean?>()
-
     val navigateToLesson: LiveData<Boolean?>
         get() = _navigateToLesson
 
@@ -47,24 +46,24 @@ class HomeViewModel(application: Application,val authToken: String) : AndroidVie
 
     init {
         getCourses(authToken)
-        //refreshDataFromRepository() Todo: Refactor
+        //refreshDataFromRepository() Todo: Removed
     }
 
 
-    private fun refreshDataFromRepository() {
-        viewModelScope.launch {
-            try {
-                vocabsRepository.refreshVocabs()
-                _eventNetworkError.value = false
-                _isNetworkErrorShown.value = false
-
-            } catch (networkError: IOException) {
-                if(vocabs.value.isNullOrEmpty())
-                    Log.e("error",networkError.message.toString())
-                    _eventNetworkError.value = true
-            }
-        }
-    }
+//    private fun refreshDataFromRepository() {
+//        viewModelScope.launch {
+//            try {
+//                vocabsRepository.refreshVocabs()
+//                _eventNetworkError.value = false
+//                _isNetworkErrorShown.value = false
+//
+//            } catch (networkError: IOException) {
+//                if(vocabs.value.isNullOrEmpty())
+//                    Log.e("error",networkError.message.toString())
+//                    _eventNetworkError.value = true
+//            }
+//        }
+//    }
 
     fun getCourses(authToken : String){
         //Log.e("HomeViewModel","getting courses")
@@ -101,9 +100,5 @@ class HomeViewModel(application: Application,val authToken: String) : AndroidVie
         super.onCleared()
         viewModelJob.cancel()
     }
-
-
-
-
 
 }

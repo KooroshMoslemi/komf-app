@@ -10,24 +10,16 @@ import com.example.mvp2.domain.Vocab
 import com.example.mvp2.lesson.LessonStatus
 import kotlinx.coroutines.*
 
-class FlashcardViewModel(private val lesson: Lesson, val database: VocabDao) : ViewModel() {
+class FlashcardViewModel(private val vocabs: ArrayList<Vocab>,val lessonStatus: LessonStatus, val database: VocabDao) : ViewModel() {
 
-    private val _vocabs :  LiveData<List<Vocab>> = Transformations.map(fetchVocabs()){
-        it.asDomainModel()
-    }
 
     private val _currentVocabIndex = MutableLiveData<Int>().apply {
         value = 0
     }
 
-    var currentVocab : LiveData<Vocab> = Transformations.switchMap(_currentVocabIndex){ vocabId->
-        Transformations.map(_vocabs){ vocabList->
-            vocabList[vocabId!!]
-        }
+    var currentVocab : LiveData<Vocab> = Transformations.map(_currentVocabIndex){ vocabId->
+        vocabs[vocabId!!]
     }
-
-    val lessonStatus: LessonStatus
-        get() = lesson.lessonStatus
 
 
     val vocabIdsUpdate = ArrayList<Long>()
@@ -48,31 +40,31 @@ class FlashcardViewModel(private val lesson: Lesson, val database: VocabDao) : V
     }
 
 
-    private fun fetchVocabs(): LiveData<List<DatabaseVocab>> {
-            when(lesson.lessonStatus){
-                LessonStatus.COMPLETED->{
-                    return fetchVocabsCompletedMode(lesson.lessonId)
-                }
-                else->{//active
-                    return fetchVocabsInProgressMode(lesson.lessonId,lesson.remainedVocabIds)
-                }
-            }
-    }
+//    private fun fetchVocabs(): LiveData<List<DatabaseVocab>> {
+//            when(lesson.lessonStatus){
+//                LessonStatus.COMPLETED->{
+//                    return fetchVocabsCompletedMode(lesson.lessonId)
+//                }
+//                else->{//active
+//                    return fetchVocabsInProgressMode(lesson.lessonId,lesson.remainedVocabIds)
+//                }
+//            }
+//    }
 
 
-    private  fun fetchVocabsInProgressMode(lessonId:Long, vocabIds:List<Long>): LiveData<List<DatabaseVocab>> {
-        return database.getInProgressLessonVocabs(lessonId, vocabIds)
-    }
-
-    private fun fetchVocabsCompletedMode(lessonId:Long): LiveData<List<DatabaseVocab>> {
-        return database.getCompletedLessonVocabs(lessonId)
-    }
+//    private  fun fetchVocabsInProgressMode(lessonId:Long, vocabIds:List<Long>): LiveData<List<DatabaseVocab>> {
+//        return database.getInProgressLessonVocabs(lessonId, vocabIds)
+//    }
+//
+//    private fun fetchVocabsCompletedMode(lessonId:Long): LiveData<List<DatabaseVocab>> {
+//        return database.getCompletedLessonVocabs(lessonId)
+//    }
 
 
     fun nextVocab(){
         _flashcardSide.value = false
         _currentVocabIndex.value?.let { a->
-            if(a+1 < _vocabs.value!!.size)
+            if(a+1 < vocabs.size)
                 _currentVocabIndex.value = a+1
         }
     }
@@ -89,7 +81,7 @@ class FlashcardViewModel(private val lesson: Lesson, val database: VocabDao) : V
     fun crossVocab(){
         _flashcardSide.value = false
         _currentVocabIndex.value?.let { a->
-            if(a+1 < _vocabs.value!!.size)
+            if(a+1 < vocabs.size)
                 _currentVocabIndex.value = a+1
             else{
                 //Todo:save and exit question
@@ -101,9 +93,9 @@ class FlashcardViewModel(private val lesson: Lesson, val database: VocabDao) : V
     fun checkVocab(){
         _flashcardSide.value = false
         _currentVocabIndex.value?.let { a->
-            if(a+1 < _vocabs.value!!.size)
+            if(a+1 < vocabs.size)
             {
-                vocabIdsUpdate.add(_vocabs.value!![a].lessonId)
+                vocabIdsUpdate.add(vocabs[a].lessonId)
                 _currentVocabIndex.value = a+1
             }
             else{

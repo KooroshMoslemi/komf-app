@@ -29,7 +29,7 @@ data class NetworkCoursesContainer(val data: List<NetworkCourse>)
 data class NetworkQuizContainer(val quiz: NetworkQuiz)
 
 @JsonClass(generateAdapter = true)
-data class NetworkVocabContainer(val vocabs: List<NetworkVocab>)
+data class NetworkVocabContainer(val data: List<NetworkVocab>)
 
 
 @JsonClass(generateAdapter = true)
@@ -62,10 +62,8 @@ data class NetworkQuestion(
 
 @JsonClass(generateAdapter = true)
 data class NetworkVocab(
-    @Json(name="vocab_id")
+    @Json(name="id")
     val vocabId:Long,
-    @Json(name="lesson_id")
-    val lessonId:Long,
     val word:String,
     val syn:String,
     val def:String,
@@ -128,16 +126,29 @@ fun NetworkQuizContainer.asDomainModel(): Quiz {
 }
 
 
-fun NetworkVocabContainer.asDatabaseModel(): List<DatabaseVocab> {
-    return vocabs.map {
+fun NetworkVocabContainer.asDatabaseModel(): List<DatabaseVocab> {//Todo: Remove this later
+    return data.map {
         DatabaseVocab(
             vocabId = it.vocabId,
-            lessonId = it.lessonId,
+            lessonId = 0,
             word = it.word,
             syn = it.syn,
             def = it.def,
             ex1 = it.ex1,
             ex2 = it.ex2)
+    }
+}
+
+fun NetworkVocabContainer.asDomainModel(): List<Vocab> {
+    return data.map {
+        Vocab(
+                vocabId = it.vocabId,
+                lessonId = 0,//Todo: Remove this attribute later
+                word = it.word,
+                syn = it.syn,
+                def = it.def,
+                ex1 = it.ex1,
+                ex2 = it.ex2)
     }
 }
 

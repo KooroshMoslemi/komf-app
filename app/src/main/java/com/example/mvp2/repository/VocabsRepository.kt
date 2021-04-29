@@ -17,11 +17,11 @@ class VocabsRepository(private val database: VocabsDatabase) {
         it.asDomainModel()
     }
 
-    suspend fun refreshVocabs() {
-        withContext(Dispatchers.IO) {
-            Log.d("repository","refresh vocabs is called");
-            val vocabs = Network.instance.getVocabs().await()
-            database.vocabDao.insertAll(vocabs.asDatabaseModel())
-        }
-    }
+//    suspend fun refreshVocabs() {
+//        withContext(Dispatchers.IO) {
+//            Log.d("repository","refresh vocabs is called");
+//            val vocabs = Network.instance.getVocabs().await()
+//            database.vocabDao.insertAll(vocabs.asDatabaseModel())
+//        }
+//    }
 }

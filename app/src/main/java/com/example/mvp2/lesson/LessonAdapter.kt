@@ -8,12 +8,14 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvp2.R
+import com.example.mvp2.course.CourseViewPagerAdapter
+import com.example.mvp2.domain.Course
 import com.example.mvp2.domain.Lesson
 import com.github.vipulasri.timelineview.TimelineView
 import com.github.vipulasri.timelineview.sample.utils.VectorDrawableUtils
 import kotlinx.android.synthetic.main.lesson_item.view.*
 
-class LessonAdapter(private val mFeedList: List<Lesson>) : RecyclerView.Adapter<LessonAdapter.TimeLineViewHolder>() {
+class LessonAdapter(private val mFeedList: List<Lesson>,private val onClickListener: LessonAdapter.OnClickListener) : RecyclerView.Adapter<LessonAdapter.TimeLineViewHolder>() {
 
     private lateinit var mLayoutInflater: LayoutInflater
 
@@ -51,8 +53,9 @@ class LessonAdapter(private val mFeedList: List<Lesson>) : RecyclerView.Adapter<
         holder.lessonItem.setOnClickListener { view->
             if (timeLineModel.lessonStatus != LessonStatus.INACTIVE)
             {
-                Log.e("before navigation","${timeLineModel.remainedVocabIds.size}")
-                view.findNavController().navigate(LessonFragmentDirections.actionLessonFragmentToFlashcardFragment(timeLineModel))
+                onClickListener.onClick(timeLineModel)
+//                Log.e("before navigation","${timeLineModel.remainedVocabIds.size}")
+//                view.findNavController().navigate(LessonFragmentDirections.actionLessonFragmentToFlashcardFragment(timeLineModel))
             }
         }
     }
@@ -75,6 +78,10 @@ class LessonAdapter(private val mFeedList: List<Lesson>) : RecyclerView.Adapter<
 //            timeline.lineWidth = 20
             timeline.initLine(viewType)
         }
+    }
+
+    class OnClickListener(val clickListener: (lessonProperty: Lesson) -> Unit) {
+        fun onClick(lessonProperty: Lesson) = clickListener(lessonProperty)
     }
 
 }

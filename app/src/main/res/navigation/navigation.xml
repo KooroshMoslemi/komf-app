@@ -32,8 +32,8 @@
         android:label="FlashcardFragment"
         tools:layout="@layout/fragment_flashcard">
         <argument
-            android:name="lesson"
-            app:argType="com.example.mvp2.domain.Lesson" />
+            android:name="vocabs"
+            app:argType="com.example.mvp2.domain.VocabList" />
     </fragment>
     <fragment
         android:id="@+id/setupFragment"

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mvp2.domain.Lesson
+import com.example.mvp2.domain.Vocab
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
 import com.example.mvp2.network.asDomainModel
@@ -22,9 +23,17 @@ class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
     private val _lessons = MutableLiveData<List<Lesson>>()
     val lessons : LiveData<List<Lesson>> get() = _lessons
 
+    private val _lessonVocabs = MutableLiveData<List<Vocab>>()
+    val lessonVocabs : LiveData<List<Vocab>> get() = _lessonVocabs
+
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus>
         get() = _status
+
+
+    private val _navigateToFlashCard = MutableLiveData<Boolean?>()
+    val navigateToFlashCard: LiveData<Boolean?>
+        get() = _navigateToFlashCard
 
     init {
         getLessons(authToken,courseId)
@@ -48,7 +57,32 @@ class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
         }
     }
 
+    fun getVocabs(authToken:String, lessonId:Long){
+        coroutineScope.launch {
+            var vocabsDeferred = Network.instance.getVocabs("Bearer $authToken",lessonId)
+            try {
+                val results = vocabsDeferred.await().asDomainModel()
+                Log.e("LessonViewModel","vocabsFetched ${results.size}")
+                _status.value = ApiStatus.DONE
+                _lessonVocabs.value = results
+                onFlashCardNavigating()
+            }
+            catch (e:Exception){
+                Log.e("error",e.message.toString())
+                _status.value = ApiStatus.ERROR
+                _lessonVocabs.value = ArrayList()
+            }
+        }
+    }
 
+
+    fun doneFlashCardNavigating() {
+        _navigateToFlashCard.value = null
+    }
+
+    fun onFlashCardNavigating(){
+        _navigateToFlashCard.value = true
+    }
 
     override fun onCleared() {
         super.onCleared()

@@ -18,6 +18,7 @@ import com.example.mvp2.databinding.FragmentFlashcardBinding
 import kotlinx.android.synthetic.main.card_back.view.*
 import kotlinx.android.synthetic.main.card_front.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class FlashcardFragment : Fragment(),TextToSpeech.OnInitListener {
@@ -40,7 +41,7 @@ class FlashcardFragment : Fragment(),TextToSpeech.OnInitListener {
         val args = FlashcardFragmentArgs.fromBundle(requireArguments())
         //Toast.makeText(context,args.lesson.lessonTitle,Toast.LENGTH_LONG).show()
         val dataSource = getDatabase(application).vocabDao
-        val viewModelFactory = FlashcardViewModelFactory(args.lesson, dataSource)
+        val viewModelFactory = FlashcardViewModelFactory(args.vocabs.vocabs,args.vocabs.lessonStatus, dataSource)
         val flashcardViewModel = ViewModelProvider(this, viewModelFactory).get(FlashcardViewModel::class.java)
 
         val tts = TextToSpeech(context, this)
