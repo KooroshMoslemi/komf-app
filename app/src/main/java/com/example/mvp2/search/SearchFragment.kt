@@ -36,7 +36,7 @@ class SearchFragment : Fragment() {
                 inflater, R.layout.fragment_search, container, false)
 
 
-        val bottomView : BottomNavigationView = activity!!.findViewById(R.id.bottomNavigationView)
+        val bottomView : BottomNavigationView = activity!!.findViewById(R.id.bottomNavigationView);
         showBottomNavigationView(bottomView)
 
         sessionManager = SessionManager(context!!)

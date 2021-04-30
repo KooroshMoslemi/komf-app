@@ -21,7 +21,8 @@
         tools:layout="@layout/fragment_lesson">
         <action
             android:id="@+id/action_lessonFragment_to_flashcardFragment"
-            app:destination="@id/flashcardFragment" />
+            app:destination="@id/flashcardFragment"
+            app:popUpTo="@id/lessonFragment" />
         <argument
             android:name="courseId"
             app:argType="long" />

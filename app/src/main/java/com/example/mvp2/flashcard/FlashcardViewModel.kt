@@ -85,6 +85,7 @@ class FlashcardViewModel(private val vocabs: ArrayList<Vocab>,val lessonStatus: 
                 _currentVocabIndex.value = a+1
             else{
                 //Todo:save and exit question
+
             }
         }
     }
@@ -100,6 +101,7 @@ class FlashcardViewModel(private val vocabs: ArrayList<Vocab>,val lessonStatus: 
             }
             else{
                 //Todo:save and exit question
+
             }
         }
     }

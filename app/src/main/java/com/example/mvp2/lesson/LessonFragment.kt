@@ -33,6 +33,7 @@ class LessonFragment : Fragment() {
     private lateinit var mAdapter: LessonAdapter
     private lateinit var viewModel: LessonViewModel
     private lateinit var sessionManager: SessionManager
+    private lateinit var binding : FragmentLessonBinding
     private var selectedLessonStatus : LessonStatus = LessonStatus.INACTIVE
 
     override fun onCreateView(
@@ -41,14 +42,22 @@ class LessonFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //return super.onCreateView(inflater, container, savedInstanceState)
-        val binding: FragmentLessonBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_lesson, container, false)
+
 
 
         val args = LessonFragmentArgs.fromBundle(requireArguments())
         sessionManager = SessionManager(context!!)
         val viewModelFactory = LessonViewModelFactory(sessionManager.fetchAuthToken()!!,args.courseId)
         viewModel = ViewModelProvider(this, viewModelFactory).get(LessonViewModel::class.java)
+
+
+        Log.e("LessonFragment","here")
+        if(viewModel.invalidateLessonFlag){
+            viewModel.invalidateLessons()
+        }
+        startShimmerEffect()
 
 
         binding.setLifecycleOwner(this)
@@ -67,18 +76,19 @@ class LessonFragment : Fragment() {
                     selectedLessonStatus = it.lessonStatus
                     viewModel.getVocabs(sessionManager.fetchAuthToken()!!,it.lessonId)
                 })
-                binding.shimmerViewContainer.stopShimmer()
-                binding.shimmerViewContainer.visibility = View.GONE
-                binding.recyclerView.visibility = View.VISIBLE
-                binding.recyclerView.adapter = mAdapter
+                stopShimmerEffect()
+            }
+            else{
+                Log.e("LessonFragment","getting lessons")
+                viewModel.getLessons(sessionManager.fetchAuthToken()!!,args.courseId)
             }
         })
 
 
         viewModel.navigateToFlashCard.observe(viewLifecycleOwner, Observer {
             viewModel.lessonVocabs.value?.let { vocabs->
-
                 if(selectedLessonStatus != LessonStatus.INACTIVE){ //!vocabs.isNullOrEmpty() && //Todo: check this if again
+                    viewModel.invalidateLessonsOnReturn()
                     findNavController().navigate(
                             LessonFragmentDirections.actionLessonFragmentToFlashcardFragment(
                                     VocabList(
@@ -94,5 +104,20 @@ class LessonFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    private fun stopShimmerEffect(){
+        Log.e("LessonFragment","stopShimmer")
+        binding.shimmerViewContainer.stopShimmer()
+        binding.shimmerViewContainer.visibility = View.GONE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.recyclerView.adapter = mAdapter
+    }
+
+    private fun startShimmerEffect(){
+        Log.e("LessonFragment","startShimmer")
+        binding.shimmerViewContainer.startShimmer()
+        binding.shimmerViewContainer.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.GONE
     }
 }

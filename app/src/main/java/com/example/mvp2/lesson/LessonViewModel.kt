@@ -31,6 +31,9 @@ class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
         get() = _status
 
 
+    var invalidateLessonFlag : Boolean = false
+
+
     private val _navigateToFlashCard = MutableLiveData<Boolean?>()
     val navigateToFlashCard: LiveData<Boolean?>
         get() = _navigateToFlashCard
@@ -40,11 +43,22 @@ class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
     }
 
 
-    private fun getLessons(authToken:String, courseId:Long){
+    fun invalidateLessons(){
+        _lessons.value = ArrayList()
+    }
+
+
+    fun invalidateLessonsOnReturn(){
+        invalidateLessonFlag = true
+    }
+
+
+    fun getLessons(authToken:String, courseId:Long){
         coroutineScope.launch {
             var lessonsDeferred = Network.instance.getLessons("Bearer $authToken",courseId)
             try {
                 //Todo: automatically navigate back to home when lessons are empty
+                Log.e("LessonViewModel","lessons received")
                 val results = lessonsDeferred.await().asDomainModel()
                 _status.value = ApiStatus.DONE
                 _lessons.value = results
