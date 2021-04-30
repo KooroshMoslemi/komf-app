@@ -45,6 +45,7 @@ class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
 
     fun invalidateLessons(){
         _lessons.value = ArrayList()
+        //_lessonVocabs.value = ArrayList()
     }
 
 

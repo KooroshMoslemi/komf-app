@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class VocabList(
         val vocabs : ArrayList<Vocab>,
-        val lessonStatus: LessonStatus
+        val lessonStatus: LessonStatus,
+        val lessonId: Long
 ): Parcelable

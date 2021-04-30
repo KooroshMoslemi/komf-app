@@ -82,6 +82,12 @@ interface Service {
             @Path("course_id") courseId: Long
     ): Deferred<GeneralResponse>
 
+    @POST("api/lesson/vocab/check")
+    fun submitVocabProgress(
+        @Header("Authorization") authToken: String,
+        @Body request: ProgressRequest
+    ): Deferred<GeneralResponse>
+
 //
 //    @Headers("Accept: application/json")
 //    @POST("api/login")

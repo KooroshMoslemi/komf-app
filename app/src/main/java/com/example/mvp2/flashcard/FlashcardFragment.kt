@@ -12,10 +12,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.mvp2.R
+import com.example.mvp2.database.SessionManager
 import com.example.mvp2.database.getDatabase
 import com.example.mvp2.databinding.FragmentFlashcardBinding
 import kotlinx.android.synthetic.main.card_back.view.*
+import kotlinx.android.synthetic.main.card_front.*
 import kotlinx.android.synthetic.main.card_front.view.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,6 +30,7 @@ class FlashcardFragment : Fragment(),TextToSpeech.OnInitListener {
     private lateinit var mSetLeftIn: AnimatorSet
     private var mIsBackVisible : Boolean = false
     private lateinit var binding: FragmentFlashcardBinding
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -38,10 +42,11 @@ class FlashcardFragment : Fragment(),TextToSpeech.OnInitListener {
         )
 
         val application = requireNotNull(this.activity).application
+        sessionManager = SessionManager(context!!)
         val args = FlashcardFragmentArgs.fromBundle(requireArguments())
         //Toast.makeText(context,args.lesson.lessonTitle,Toast.LENGTH_LONG).show()
         val dataSource = getDatabase(application).vocabDao
-        val viewModelFactory = FlashcardViewModelFactory(args.vocabs.vocabs,args.vocabs.lessonStatus, dataSource)
+        val viewModelFactory = FlashcardViewModelFactory(args.vocabs.vocabs,args.vocabs.lessonStatus,args.vocabs.lessonId, dataSource)
         val flashcardViewModel = ViewModelProvider(this, viewModelFactory).get(FlashcardViewModel::class.java)
 
         val tts = TextToSpeech(context, this)
@@ -56,6 +61,14 @@ class FlashcardFragment : Fragment(),TextToSpeech.OnInitListener {
                 binding.backInclude.ex2Tv.text = "e.g. ${vocab.ex2}"
             }
         })
+
+        flashcardViewModel.navigateToLesson.observe(viewLifecycleOwner, Observer {
+            findNavController().popBackStack()
+        })
+
+        binding.checkVocabBtn.setOnClickListener {
+            flashcardViewModel.checkVocab(sessionManager.fetchAuthToken()!!)
+        }
 
 
         binding.frontInclude.ttsImageView.setOnClickListener {

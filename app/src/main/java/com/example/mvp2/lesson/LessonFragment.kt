@@ -35,6 +35,7 @@ class LessonFragment : Fragment() {
     private lateinit var sessionManager: SessionManager
     private lateinit var binding : FragmentLessonBinding
     private var selectedLessonStatus : LessonStatus = LessonStatus.INACTIVE
+    private var selectedLessonId : Long = -1L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +54,6 @@ class LessonFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(LessonViewModel::class.java)
 
 
-        Log.e("LessonFragment","here")
         if(viewModel.invalidateLessonFlag){
             viewModel.invalidateLessons()
         }
@@ -74,6 +74,7 @@ class LessonFragment : Fragment() {
                 mAdapter = LessonAdapter(lessons,LessonAdapter.OnClickListener{
                     Log.e("LessonFragment","lesson item clicked!")
                     selectedLessonStatus = it.lessonStatus
+                    selectedLessonId = it.lessonId
                     viewModel.getVocabs(sessionManager.fetchAuthToken()!!,it.lessonId)
                 })
                 stopShimmerEffect()
@@ -86,15 +87,18 @@ class LessonFragment : Fragment() {
 
 
         viewModel.navigateToFlashCard.observe(viewLifecycleOwner, Observer {
-            viewModel.lessonVocabs.value?.let { vocabs->
-                if(selectedLessonStatus != LessonStatus.INACTIVE){ //!vocabs.isNullOrEmpty() && //Todo: check this if again
-                    viewModel.invalidateLessonsOnReturn()
-                    findNavController().navigate(
+            it?.let {
+                viewModel.lessonVocabs.value?.let { vocabs->
+                    if(selectedLessonStatus != LessonStatus.INACTIVE && selectedLessonId != -1L){
+                        viewModel.invalidateLessonsOnReturn()
+                        findNavController().navigate(
                             LessonFragmentDirections.actionLessonFragmentToFlashcardFragment(
-                                    VocabList(
-                                            vocabs as ArrayList<Vocab>,
-                                            selectedLessonStatus)))
-                    viewModel.doneFlashCardNavigating()
+                                VocabList(
+                                    vocabs as ArrayList<Vocab>,
+                                    selectedLessonStatus,
+                                    selectedLessonId)))
+                        viewModel.doneFlashCardNavigating()
+                    }
                 }
             }
         })
