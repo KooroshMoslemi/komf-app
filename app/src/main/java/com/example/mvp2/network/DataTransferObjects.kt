@@ -26,7 +26,7 @@ import com.squareup.moshi.JsonClass
 data class NetworkCoursesContainer(val data: List<NetworkCourse>)
 
 @JsonClass(generateAdapter = true)
-data class NetworkQuizContainer(val quiz: NetworkQuiz)
+data class NetworkQuizContainer(val data:List<NetworkQuestion>)
 
 @JsonClass(generateAdapter = true)
 data class NetworkVocabContainer(val data: List<NetworkVocab>)
@@ -38,24 +38,24 @@ data class NetworkLessonContainer(val data: List<NetworkLesson>)
 
 @JsonClass(generateAdapter = true)
 data class NetworkQuiz(
-        val time:Int,
-        val questions:List<NetworkQuestion> = ArrayList()
+        //val time:Int,
+        val data:List<NetworkQuestion> = ArrayList()
 )
 
 
 @JsonClass(generateAdapter = true)
 data class NetworkQuestion(
-        @Json(name="text")
+        @Json(name="title")
         val questionText:String,
-        @Json(name="ch1")
+        @Json(name="q1")
         val choiceOne:String,
-        @Json(name="ch2")
+        @Json(name="q2")
         val choiceTwo:String,
-        @Json(name="ch3")
+        @Json(name="q3")
         val choiceThree:String,
-        @Json(name="ch4")
+        @Json(name="q4")
         val choiceFour:String,
-        @Json(name="correct_choice")
+        @Json(name="answer")
         val correctChoice:Int
 )
 
@@ -106,7 +106,7 @@ data class NetworkLesson(
 
 fun NetworkQuizContainer.asDomainModel(): Quiz {
 
-    val questionsList : List<Question> = quiz.questions.map {
+    val questionsList : List<Question> = data.map {
         Question(
                 questionText = it.questionText,
                 choiceOne = it.choiceOne,
@@ -120,7 +120,7 @@ fun NetworkQuizContainer.asDomainModel(): Quiz {
     questions.addAll(questionsList)
 
     return Quiz(
-            time = quiz.time,
+            time = 3,//quiz.time, //Todo: fix this later
             questions =  questions
     )
 }

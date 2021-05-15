@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.mvp2.R
+import com.example.mvp2.database.SessionManager
 import com.example.mvp2.databinding.FragmentSetupBinding
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.utils.hideBottomNavigationView
@@ -27,6 +28,8 @@ class SetupFragment : Fragment() {
         ViewModelProviders.of(this).get(SetupViewModel::class.java)
     }
 
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding : FragmentSetupBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_setup, container, false
@@ -34,9 +37,11 @@ class SetupFragment : Fragment() {
         binding.setLifecycleOwner(this)
         //binding.viewModel = viewModel
 
+        sessionManager = SessionManager(context!!)
+
         binding.buttonApply.setOnClickListener {
             binding.buttonApply.startAnimation()
-            viewModel.prepareQuiz()
+            viewModel.prepareQuiz(sessionManager.fetchAuthToken()!!,3,"1") //Todo: integrate this part with UI
         }
 
 

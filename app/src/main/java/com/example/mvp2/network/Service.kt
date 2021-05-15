@@ -41,8 +41,11 @@ interface Service {
             @Path("course_id") courseId: Long
     ): Deferred<NetworkLessonContainer>
 
-    @GET("72b7cc84")
-    fun getQuiz(): Deferred<NetworkQuizContainer>
+    @POST("api/lessons/quiz")
+    fun getQuiz(
+            @Header("Authorization") authToken: String,
+            @Body request: QuizRequest
+    ): Deferred<NetworkQuizContainer>
 
     @GET("api/courses")
     fun verifyToken(

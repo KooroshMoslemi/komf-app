@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.mvp2.domain.Lesson
 import com.example.mvp2.domain.Question
 import com.example.mvp2.domain.Quiz
+import com.example.mvp2.domain.QuizRequest
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
 import com.example.mvp2.network.asDomainModel
@@ -37,9 +38,9 @@ class SetupViewModel : ViewModel() {
 
 
 
-    fun prepareQuiz(){
+    fun prepareQuiz(authToken:String, limit: Int,lessons_id:String){
         coroutineScope.launch {
-            var quizDeferred = Network.instance.getQuiz()
+            var quizDeferred = Network.instance.getQuiz("Bearer $authToken",QuizRequest(limit,lessons_id))
             try {
                 val result = quizDeferred.await().asDomainModel()
                 _quiz.value = result
