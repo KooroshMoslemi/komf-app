@@ -91,6 +91,13 @@ interface Service {
         @Body request: ProgressRequest
     ): Deferred<GeneralResponse>
 
+
+    @POST("api/user/ChangePassword")
+    fun changePassword(
+        @Header("Authorization") authToken: String,
+        @Body request: ChangePasswordRequest
+    ): Deferred<GeneralResponse>
+
 //
 //    @Headers("Accept: application/json")
 //    @POST("api/login")

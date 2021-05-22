@@ -123,6 +123,11 @@ dependencies {
     // Shimmer Effect
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
+    // Sweet Alert
+    implementation 'com.github.f0ris.sweetalert:library:1.6.2'
+
+    // Image Picker
+    implementation 'com.github.dhaval2404:imagepicker:2.0'
 
 //    implementation 'com.squareup.picasso:picasso:2.71828'
 }

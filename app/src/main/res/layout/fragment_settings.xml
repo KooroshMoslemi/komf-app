@@ -66,6 +66,7 @@
 
 
             <TextView
+                android:id="@+id/tvChangePass"
                 style="@style/viewParent.headerText.settingsTextIcon"
                 android:layout_marginTop="10dp"
                 android:text="Change Password"

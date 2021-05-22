@@ -45,6 +45,8 @@ class LoginViewModel : ViewModel() {
                     val statusResponse : GeneralResponse = statusDeferred.await()
                     if (statusResponse.status.equals("success"))
                         onHomeNavigating()
+                    else
+                        Log.e("Error1","token expired")
                 }
                 catch (e: Exception){
                     Log.e("Error1",e.message.toString())

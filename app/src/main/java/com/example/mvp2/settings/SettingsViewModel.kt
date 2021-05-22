@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.mvp2.domain.ChangePasswordRequest
 import com.example.mvp2.domain.GeneralResponse
+import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
 import com.example.mvp2.network.asDomainModel
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +25,11 @@ class SettingsViewModel : ViewModel() {
         get() = _navigateToLogin
 
 
+    private val _status = MutableLiveData<ApiStatus>()
+    val status: LiveData<ApiStatus>
+        get() = _status
+
+
     fun logout(authToken : String){
         viewModelScope.launch {
             try {
@@ -37,6 +44,27 @@ class SettingsViewModel : ViewModel() {
 
             } catch (networkError: IOException) {
                 Log.e("SettingsViewModel",networkError.message.toString())
+            }
+        }
+    }
+
+    fun changePassword(authToken : String,oldPassword:String,newPassword:String){
+        viewModelScope.launch {
+            try {
+                val response : GeneralResponse = Network.instance.changePassword("Bearer $authToken",
+                    ChangePasswordRequest(oldPassword,newPassword)
+                ).await()
+
+                if(response.status.contains("success")){
+                    _status.value = ApiStatus.DONE
+                }
+                else{
+                    _status.value = ApiStatus.ERROR
+                }
+
+            } catch (networkError: IOException) {
+                Log.e("SettingsViewModel",networkError.message.toString())
+                _status.value = ApiStatus.ERROR
             }
         }
     }

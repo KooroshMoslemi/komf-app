@@ -1,13 +1,17 @@
 package com.example.mvp2.utils
 
 import android.graphics.Typeface
+import android.net.Uri
 import android.text.Spannable
 
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
+import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.navigation.NavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -46,4 +50,13 @@ fun showBottomNavigationView(view: BottomNavigationView) {
 
 fun NavController.doIfCurrentDestination(@IdRes destination: Int, action: NavController.()-> Unit){
     if(this.currentDestination?.id == destination){action()}
+}
+
+fun ImageView.setLocalImage(uri: Uri, applyCircle: Boolean = false) {
+    val glide = Glide.with(this).load(uri)
+    if (applyCircle) {
+        glide.apply(RequestOptions.circleCropTransform()).into(this)
+    } else {
+        glide.into(this)
+    }
 }
