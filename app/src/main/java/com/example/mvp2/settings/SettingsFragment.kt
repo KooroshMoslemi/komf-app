@@ -60,9 +60,17 @@ class SettingsFragment : Fragment() {
 
         successDialog = SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE)
         successDialog.titleText = "Password Changed Successfully"
+        successDialog.setCancelable(false)
+        successDialog.setConfirmClickListener {
+            it.dismiss()
+        }
 
         errorDialog = SweetAlertDialog(context,SweetAlertDialog.ERROR_TYPE)
         errorDialog.titleText = "Password Change Failed"
+        errorDialog.setCancelable(false)
+        errorDialog.setConfirmClickListener {
+            it.dismiss()
+        }
 
 
         viewModel.navigateToLogin.observe(viewLifecycleOwner, Observer {

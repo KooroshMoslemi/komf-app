@@ -16,11 +16,14 @@
 
 package com.example.mvp2.utils
 
+import android.content.res.Resources
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
@@ -86,6 +89,23 @@ fun bindStatus(statusImageView: ImageView,
         }
         ApiStatus.DONE -> {
             statusImageView.visibility = View.GONE
+        }
+    }
+}
+
+
+@BindingAdapter("correctAnswer","chosenAnswer","quizFinished")
+fun bindFeedbackText(feedbackTextView: TextView,
+                     correctAnswer: Int, chosenAnswer: Int , quizFinished : Boolean) {
+
+    if(quizFinished){
+        if(correctAnswer==chosenAnswer){
+            feedbackTextView.text = "Correct!"
+            feedbackTextView.setTextColor(ContextCompat.getColor(feedbackTextView.context,R.color.material_green_500))
+        }
+        else{
+            feedbackTextView.text = "Wrong! - Choice ${correctAnswer} is correct."
+            feedbackTextView.setTextColor(ContextCompat.getColor(feedbackTextView.context,R.color.material_red_500))
         }
     }
 }

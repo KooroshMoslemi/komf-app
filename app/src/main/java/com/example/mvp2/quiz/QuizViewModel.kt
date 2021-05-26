@@ -34,7 +34,7 @@ class QuizViewModel(private val quiz : Quiz) : ViewModel() {
 
     var userAnswers = ArrayList<Int>(Collections.nCopies(quiz.questions.size,-1))
 
-    private val _eventQuizFinish = MutableLiveData<Boolean>()
+    private val _eventQuizFinish = MutableLiveData<Boolean>(false)
     val eventQuizFinish: LiveData<Boolean>
         get() = _eventQuizFinish
 
@@ -77,10 +77,10 @@ class QuizViewModel(private val quiz : Quiz) : ViewModel() {
 
     private fun Boolean.toInt() = if (this) 1 else 0
 
-    fun calcScore(): Int {
-        return userAnswers.mapIndexed { index, answer ->
+    fun calcScore(): Pair<Int,Int> {
+        return Pair(userAnswers.mapIndexed { index, answer ->
             (answer == quiz.questions[index].correctChoice).toInt()
-        }.sum()
+        }.sum(),userAnswers.size)
     }
 
     fun onSubmit(checkedId : Int,forwardDirection:Boolean=true){

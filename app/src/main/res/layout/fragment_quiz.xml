@@ -56,7 +56,8 @@
                 android:layout_marginBottom="@dimen/question_vertical_margin"
                 android:textSize="@dimen/answer_text_size"
                 tools:text="forfeit"
-                android:text="@{quizViewModel.currentQuestion.choiceOne}"/>
+                android:text="@{quizViewModel.currentQuestion.choiceOne}"
+                android:enabled="@{!quizViewModel.eventQuizFinish.booleanValue()}"/>
 
             <RadioButton
                 android:id="@+id/secondAnswerRadioButton"
@@ -65,7 +66,8 @@
                 android:layout_marginBottom="@dimen/question_vertical_margin"
                 android:textSize="@dimen/answer_text_size"
                 tools:text="attract"
-                android:text="@{quizViewModel.currentQuestion.choiceTwo}"/>
+                android:text="@{quizViewModel.currentQuestion.choiceTwo}"
+                android:enabled="@{!quizViewModel.eventQuizFinish.booleanValue()}"/>
 
             <RadioButton
                 android:id="@+id/thirdAnswerRadioButton"
@@ -74,7 +76,8 @@
                 android:layout_marginBottom="@dimen/question_vertical_margin"
                 android:textSize="@dimen/answer_text_size"
                 tools:text="convince"
-                android:text="@{quizViewModel.currentQuestion.choiceThree}"/>
+                android:text="@{quizViewModel.currentQuestion.choiceThree}"
+                android:enabled="@{!quizViewModel.eventQuizFinish.booleanValue()}"/>
 
             <RadioButton
                 android:id="@+id/fourthAnswerRadioButton"
@@ -82,11 +85,28 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/answer_text_size"
                 tools:text="deceive"
-                android:text="@{quizViewModel.currentQuestion.choiceFour}"/>
+                android:text="@{quizViewModel.currentQuestion.choiceFour}"
+                android:enabled="@{!quizViewModel.eventQuizFinish.booleanValue()}"/>
         </RadioGroup>
 
 
-
+        <TextView
+            android:id="@+id/feedbackTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="Feedback"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:layout_marginStart="@dimen/question_horizontal_margin"
+            android:layout_marginTop="@dimen/vertical_margin"
+            android:layout_marginEnd="@dimen/question_horizontal_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/questionRadioGroup"
+            app:correctAnswer="@{quizViewModel.currentQuestion.correctChoice}"
+            app:chosenAnswer="@{quizViewModel.userAnswers.get(quizViewModel.currentQuestionIndex)}"
+            app:quizFinished="@{quizViewModel.eventQuizFinish.booleanValue()}"/>
 
 
         <TextView

@@ -10,9 +10,12 @@ data class Course(
         val courseTitle : String,
         val courseDescription: String,
         val photoUrl : String,
-        val price : Float
+        val price : Float,
+        val lessons : List<GeneralLesson>?
         //val availabilityStatus : CourseStatus
-):Parcelable
+):Parcelable{
+    override fun toString(): String = courseTitle
+}
 
 //val courses : List<Course> = listOf(
 //        Course(1,"Barrons - Essential Words for TOEFL" , "https://i.imgur.com/JI9hOki.jpg", CourseStatus.Open),

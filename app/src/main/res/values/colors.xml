@@ -45,6 +45,7 @@
     <color name="material_orange_500">#FF9800</color>
     <color name="material_teal_500">#009688</color>
     <color name="material_green_500">#4CAF50</color>
+    <color name="material_red_500">#f44336</color>
     <color name="cardFront">#FF6200EE</color>
     <color name="cardBack">#2962FF</color>
 </resources>

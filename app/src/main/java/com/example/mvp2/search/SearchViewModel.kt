@@ -51,6 +51,10 @@ class SearchViewModel(authToken: String) : ViewModel(){
             var coursesDeferred = Network.instance.getAllCourses("Bearer $authToken")
             try {
                 val results = coursesDeferred.await().asDomainModel()
+//                Log.e("SearchViewModel","Number of Each Course Lessons:")
+//                for(result in results){
+//                    Log.e("SearchViewModel",result.lessons?.size.toString())
+//                }
                 _status.value = ApiStatus.DONE
                 _courses.value = results
             }

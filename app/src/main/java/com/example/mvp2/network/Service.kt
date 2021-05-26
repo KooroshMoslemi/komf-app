@@ -55,7 +55,7 @@ interface Service {
     @GET("api/user/courses")
     fun getMyCourses(
             @Header("Authorization") authToken: String
-    ): Deferred<NetworkCoursesContainer>
+    ): Deferred<NetworkMyCoursesContainer>
 
     @GET("api/courses")
     fun getAllCourses(

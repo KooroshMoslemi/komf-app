@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mvp2.domain.Lesson
-import com.example.mvp2.domain.Question
-import com.example.mvp2.domain.Quiz
-import com.example.mvp2.domain.QuizRequest
+import com.example.mvp2.domain.*
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
 import com.example.mvp2.network.asDomainModel
@@ -30,12 +27,23 @@ class SetupViewModel : ViewModel() {
     val status: LiveData<ApiStatus>
         get() = _status
 
+    private val _courses = MutableLiveData<List<Course>>()
+    val courses : LiveData<List<Course>> get() = _courses
+
+
+    private val _selectedCourse = MutableLiveData<Course>()
+    val selectedCourse : LiveData<Course> get() = _selectedCourse
+
 
     private val _navigateToQuiz = MutableLiveData<Boolean?>()
 
     val navigateToQuiz: LiveData<Boolean?>
         get() = _navigateToQuiz
 
+
+    fun selectCourse(course: Course){
+        _selectedCourse.value = course
+    }
 
 
     fun prepareQuiz(authToken:String, limit: Int,lessons_id:String){
@@ -48,9 +56,24 @@ class SetupViewModel : ViewModel() {
                 //onLessonNavigating()
             }
             catch (e: Exception){
-                Log.e("Error",e.message.toString())
+                Log.e("Errorrr",e.message.toString())
                 _quiz.value = null
                 _status.value = ApiStatus.ERROR
+            }
+        }
+    }
+
+
+    fun setupQuiz(authToken:String){
+        coroutineScope.launch {
+            var coursesDeferred = Network.instance.getAllCourses("Bearer $authToken")
+            try {
+                val coursesWithLessons = coursesDeferred.await().asDomainModel()
+                _courses.value = coursesWithLessons
+            }
+            catch (e:Exception){
+                Log.e("error",e.message.toString())
+                _courses.value = ArrayList()
             }
         }
     }

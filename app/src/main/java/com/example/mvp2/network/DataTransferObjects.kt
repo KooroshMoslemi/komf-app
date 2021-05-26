@@ -26,6 +26,9 @@ import com.squareup.moshi.JsonClass
 data class NetworkCoursesContainer(val data: List<NetworkCourse>)
 
 @JsonClass(generateAdapter = true)
+data class NetworkMyCoursesContainer(val data: List<NetworkMyCourse>)
+
+@JsonClass(generateAdapter = true)
 data class NetworkQuizContainer(val data:List<NetworkQuestion>)
 
 @JsonClass(generateAdapter = true)
@@ -71,6 +74,18 @@ data class NetworkVocab(
     val ex2:String
 )
 
+@JsonClass(generateAdapter = true)
+data class NetworkMyCourse(
+        @Json(name="id")
+        val courseId : Long,
+        @Json(name="title")
+        val courseTitle : String,
+        @Json(name="description")
+        val courseDescription : String,
+        @Json(name="price")
+        val coursePrice : Float
+)
+
 
 @JsonClass(generateAdapter = true)
 data class NetworkCourse(
@@ -81,7 +96,9 @@ data class NetworkCourse(
         @Json(name="description")
         val courseDescription : String,
         @Json(name="price")
-        val coursePrice : Float
+        val coursePrice : Float,
+        @Json(name="lessons")
+        val courseLessons : List<NetworkLesson2>
 //        @Json(name="photo_url")
 //        val photoUrl : String,
 //        @Json(name="status")
@@ -101,6 +118,15 @@ data class NetworkLesson(
 //    val totalWords:String,
 //    @Json(name="word_ids")
 //    val wordIds:List<Long>
+)
+
+
+@JsonClass(generateAdapter = true)
+data class NetworkLesson2(
+        @Json(name="id")
+        val lessonId:Long,
+        @Json(name="title")
+        val lessonTitle:String
 )
 
 
@@ -176,7 +202,7 @@ fun NetworkLessonContainer.asDomainModel(): List<Lesson> {
 }
 
 
-fun NetworkCoursesContainer.asDomainModel(): List<Course> {
+fun NetworkMyCoursesContainer.asDomainModel(): List<Course> {
     return data.map {
 
 //        var status:CourseStatus = CourseStatus.Open
@@ -193,7 +219,26 @@ fun NetworkCoursesContainer.asDomainModel(): List<Course> {
                 it.courseTitle,
                 it.courseDescription,
                 "https://i.imgur.com/JI9hOki.jpg",//Todo: update this when course photo is implemented in backened
-                it.coursePrice
+                it.coursePrice,
+                null
+        )
+    }
+}
+
+
+fun NetworkCoursesContainer.asDomainModel(): List<Course> {
+    return data.map {
+
+
+        Course(
+                it.courseId,
+                it.courseTitle,
+                it.courseDescription,
+                "https://i.imgur.com/JI9hOki.jpg",//Todo: update this when course photo is implemented in backened
+                it.coursePrice,
+                it.courseLessons.map { lesson->
+                    GeneralLesson(lesson.lessonId,lesson.lessonTitle)
+                }
         )
     }
 }

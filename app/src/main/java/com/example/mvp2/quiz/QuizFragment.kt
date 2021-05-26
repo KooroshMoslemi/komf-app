@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.mvp2.R
 import com.example.mvp2.databinding.FragmentQuizBinding
 import com.example.mvp2.flashcard.FlashcardFragmentArgs
@@ -20,6 +21,7 @@ class QuizFragment : Fragment() {
 
     lateinit var binding : FragmentQuizBinding
     lateinit var quizViewModel : QuizViewModel
+    private lateinit var scoreDialog: SweetAlertDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(
@@ -35,11 +37,18 @@ class QuizFragment : Fragment() {
         binding.quizViewModel = quizViewModel
 
 
+        scoreDialog = SweetAlertDialog(context,SweetAlertDialog.NORMAL_TYPE)
+        scoreDialog.setCancelable(false)
+        scoreDialog.setConfirmClickListener {
+            it.dismiss()
+        }
+
+
         quizViewModel.eventQuizFinish.observe(viewLifecycleOwner, Observer { hasFinished->
             if (hasFinished){
-                //Todo: navigate to quiz result
-                Toast.makeText(this.activity,"Quiz Finished with score: ${quizViewModel.calcScore()}",Toast.LENGTH_LONG).show()
-                quizViewModel.onQuizFinishComplete()
+                val (score,total) = quizViewModel.calcScore()
+                scoreDialog.titleText = "Your score is $score out of $total"
+                scoreDialog.show()
             }
         })
 
