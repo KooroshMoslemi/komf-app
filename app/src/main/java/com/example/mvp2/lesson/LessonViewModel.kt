@@ -78,9 +78,15 @@ class LessonViewModel(authToken: String, courseId: Long) : ViewModel(){
             try {
                 val results = vocabsDeferred.await().asDomainModel()
                 Log.e("LessonViewModel","vocabsFetched ${results.size}")
-                _status.value = ApiStatus.DONE
-                _lessonVocabs.value = results
-                onFlashCardNavigating()
+                if(results.size > 0)
+                {
+                    _status.value = ApiStatus.DONE
+                    _lessonVocabs.value = results
+                    onFlashCardNavigating()
+                }
+                else{
+                    Log.e("LessonViewModel","no vocab for this lesson in database")
+                }
             }
             catch (e:Exception){
                 Log.e("error",e.message.toString())

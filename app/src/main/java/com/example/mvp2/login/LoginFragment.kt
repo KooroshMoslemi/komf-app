@@ -42,8 +42,8 @@ class LoginFragment : Fragment() {
 
         sessionManager = SessionManager(context!!)
 
-        sessionManager.fetchAuthToken().let {
-            if(!it.isNullOrEmpty()) viewModel.navigationPolicy(it)
+        sessionManager.fetchAuthToken()?.let {
+            if(it.isNotEmpty()) viewModel.navigationPolicy(it,sessionManager)
         }
 
 
@@ -62,15 +62,21 @@ class LoginFragment : Fragment() {
 
 
        viewModel.navigateToHome.observe(viewLifecycleOwner, Observer {
-           it.let {
+           it?.let {
               navigateToHome(sessionManager.fetchAuthToken()!!)
            }
        })
 
 
         viewModel.login.observe(viewLifecycleOwner, Observer { loginResponse->
-            loginResponse.let {
+            loginResponse?.let {
                 sessionManager.saveAuthToken(loginResponse.authToken)
+                sessionManager.saveUserFName(loginResponse.userInfo.userFirstName)
+                sessionManager.saveUserLName(loginResponse.userInfo.userLastName)
+                sessionManager.saveUserEmail(loginResponse.userInfo.userEmail)
+                sessionManager.saveUserPhone(loginResponse.userInfo.userPhone)
+                sessionManager.saveUserRole(loginResponse.userInfo.userRole)
+                sessionManager.saveUserPhoto(loginResponse.userInfo.userPhotoUrl)
 
                 Log.e("LoginFragment",loginResponse.authToken)
                 navigateToHome(loginResponse.authToken)

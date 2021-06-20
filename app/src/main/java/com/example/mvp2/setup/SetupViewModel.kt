@@ -51,12 +51,13 @@ class SetupViewModel : ViewModel() {
             var quizDeferred = Network.instance.getQuiz("Bearer $authToken",QuizRequest(limit,lessons_id))
             try {
                 val result = quizDeferred.await().asDomainModel()
+                result.time = result.questions.size //Todo: you can fix it when api returns time
                 _quiz.value = result
                 _status.value = ApiStatus.DONE
                 //onLessonNavigating()
             }
             catch (e: Exception){
-                Log.e("Errorrr",e.message.toString())
+                Log.e("Error",e.message.toString()) // If there are not enough questions this will happen
                 _quiz.value = null
                 _status.value = ApiStatus.ERROR
             }

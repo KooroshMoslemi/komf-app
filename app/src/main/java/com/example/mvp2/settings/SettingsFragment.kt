@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,11 +17,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.mvp2.R
 import com.example.mvp2.database.SessionManager
 import com.example.mvp2.databinding.FragmentSettingsBinding
+import com.example.mvp2.domain.UserInfo
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.utils.setLocalImage
 import com.example.mvp2.utils.showBottomNavigationView
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.io.InputStream
 
 class SettingsFragment : Fragment() {
 
@@ -56,7 +57,7 @@ class SettingsFragment : Fragment() {
 
         loadingDialog = SweetAlertDialog(context,SweetAlertDialog.PROGRESS_TYPE)
         loadingDialog.setCancelable(false)
-        loadingDialog.titleText = "Changing Password"
+
 
         successDialog = SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE)
         successDialog.titleText = "Password Changed Successfully"
@@ -73,10 +74,21 @@ class SettingsFragment : Fragment() {
         }
 
 
+        displayFullName()
+
+        sessionManager.fetchUserPhoto()?.let { photoUrl->
+            binding.profileCircleImageView.setLocalImage(photoUrl)
+        }
+
+
+
         viewModel.navigateToLogin.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it) {
-                    if (sessionManager.removeAuthToken() && sessionManager.removeFNameToken()) {
+                    if (sessionManager.removeAuthToken() && sessionManager.removeUserFName()
+                            && sessionManager.removeUserLName() && sessionManager.removeUserEmail()
+                            && sessionManager.removeUserPhone() && sessionManager.removeUserRole()
+                            && sessionManager.removeUserPhoto()) {
                         this.findNavController()
                             .navigate(SettingsFragmentDirections.actionSettingsFragmentToLoginFragment())
                         viewModel.doneLoginNavigating()
@@ -100,6 +112,16 @@ class SettingsFragment : Fragment() {
         })
 
 
+        viewModel.infoStatus.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                loadingDialog.dismiss()
+                if(it.status != "failed"){
+                    displayFullName()
+                }
+            }
+        })
+
+
         binding.tvLogout.setOnClickListener {
             viewModel.logout(sessionManager.fetchAuthToken()!!)
         }
@@ -108,10 +130,25 @@ class SettingsFragment : Fragment() {
             ChangePasswordtBottomSheet.showDialog(fragmentManager!!,
                 object : ChangePasswordtBottomSheet.Callbacks {
                     override fun onResponse(oldPassword: String, newPassword: String) {
+                        loadingDialog.titleText = "Changing Password"
                         loadingDialog.show()
                         viewModel.changePassword(sessionManager.fetchAuthToken()!!,oldPassword,newPassword)
                     }
                 })
+        }
+
+        val tempInfo = UserInfo(sessionManager.fetchUserFName()!!,sessionManager.fetchUserLName()!!,
+        "",sessionManager.fetchUserPhone()!!,"","")
+        binding.editContainer.setOnClickListener{
+            ChangeInfoBottomSheet.showDialog(fragmentManager!!, tempInfo,
+            object : ChangeInfoBottomSheet.Callbacks{
+                override fun onResponse(newFirstName: String, newLastName: String, newPhone: String) {
+                    loadingDialog.titleText = "Changing User Details"
+                    loadingDialog.show()
+                    viewModel.changeInfo(sessionManager.fetchAuthToken()!!,newFirstName,newLastName,newPhone,sessionManager)
+                }
+
+            })
         }
 
         binding.profileCircleImageView.setOnClickListener {
@@ -121,6 +158,14 @@ class SettingsFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    fun displayFullName(){
+        sessionManager.fetchUserFName()?.let { fname->
+            sessionManager.fetchUserLName()?.let { lname->
+                binding.usernameTextView.text = "$fname $lname"
+            }
+        }
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -156,6 +201,14 @@ class SettingsFragment : Fragment() {
                 PROFILE_IMAGE_REQ_CODE -> {
                     mProfileUri = uri
                     binding.profileCircleImageView.setLocalImage(uri,false)
+
+                    data.let {
+                        val inputStream: InputStream? =
+                                context?.contentResolver?.openInputStream(it.data!!)
+                        inputStream?.let { stream ->
+                            viewModel.uploadUserProfileImage(sessionManager.fetchAuthToken()!!,stream)
+                        }
+                    }
                 }
             }
         } else if (resultCode == ImagePicker.RESULT_ERROR) {

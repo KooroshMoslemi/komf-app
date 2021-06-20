@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.mvp2.database.SessionManager
 import com.example.mvp2.domain.LoginRequest
 import com.example.mvp2.domain.LoginResponse
 import com.example.mvp2.domain.GeneralResponse
+import com.example.mvp2.domain.VerifyResponse
 import com.example.mvp2.network.ApiStatus
 import com.example.mvp2.network.Network
 import kotlinx.coroutines.CoroutineScope
@@ -36,15 +38,23 @@ class LoginViewModel : ViewModel() {
 
 
 
-    fun navigationPolicy(authToken:String) {
+    fun navigationPolicy(authToken:String,sessionManager: SessionManager) {
         authToken.let {
             coroutineScope.launch {
                 Log.e("VerifyToken",authToken)
-                val statusDeferred = Network.instance.verifyToken("Bearer $authToken")
+                val verifyDeferred = Network.instance.verifyToken("Bearer $authToken")
                 try {
-                    val statusResponse : GeneralResponse = statusDeferred.await()
-                    if (statusResponse.status.equals("success"))
+                    val verifyResponse : VerifyResponse = verifyDeferred.await()
+                    if (verifyResponse.status.equals("success"))
+                    {
+                        sessionManager.saveUserFName(verifyResponse.userInfo.userFirstName)
+                        sessionManager.saveUserLName(verifyResponse.userInfo.userLastName)
+                        sessionManager.saveUserEmail(verifyResponse.userInfo.userEmail)
+                        sessionManager.saveUserPhone(verifyResponse.userInfo.userPhone)
+                        sessionManager.saveUserRole(verifyResponse.userInfo.userRole)
+                        sessionManager.saveUserPhoto(verifyResponse.userInfo.userPhotoUrl)
                         onHomeNavigating()
+                    }
                     else
                         Log.e("Error1","token expired")
                 }
@@ -61,6 +71,7 @@ class LoginViewModel : ViewModel() {
             val loginDeferred = Network.instance.login(LoginRequest(email,password))
             try {
                 val loginResponse : LoginResponse = loginDeferred.await()
+                Log.e("LoginViewModel",loginResponse.userInfo.userFirstName)
                 _login.value = loginResponse
                 _status.value = ApiStatus.DONE
             }

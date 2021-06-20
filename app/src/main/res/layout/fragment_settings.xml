@@ -22,6 +22,7 @@
                 android:text="Profile" />
 
             <RelativeLayout
+                android:id="@+id/editContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -31,7 +32,7 @@
                     android:layout_height="60dp"
                     app:civ_border_width="2dp"
                     app:civ_border_color="@color/colorPrimaryLight"
-                    android:src="@drawable/user_dp"
+                    android:src="@mipmap/default_profile"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="10dp" />
 
@@ -76,7 +77,7 @@
                 style="@style/viewParent.headerText.settingsMiniTitle"
                 android:text="Notifications" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 style="@style/settingsText"
                 android:checked="true"
                 android:drawableLeft="@drawable/ic_notifications"

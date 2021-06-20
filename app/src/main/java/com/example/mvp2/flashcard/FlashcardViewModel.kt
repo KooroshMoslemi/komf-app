@@ -106,7 +106,7 @@ class FlashcardViewModel(private val vocabs: ArrayList<Vocab>,val lessonStatus: 
     fun checkVocab(authToken:String){
         _flashcardSide.value = false
         _currentVocabIndex.value?.let { a->
-            if(a+1 < vocabs.size)
+            if(a+1 <= vocabs.size)
             {
                 //.add(vocabs[a].lessonId)
 
@@ -126,6 +126,11 @@ class FlashcardViewModel(private val vocabs: ArrayList<Vocab>,val lessonStatus: 
                         }
                     } catch (e: Exception) {
                         Log.e("error", e.message.toString())
+                    }
+                    finally {
+                        if (a == vocabs.size - 1){
+                            _navigateToLesson.value = true
+                        }
                     }
                 }
             }

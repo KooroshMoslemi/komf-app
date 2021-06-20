@@ -9,5 +9,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Quiz(
         val questions : ArrayList<Question>,
-        val time : Int
+        var time : Int
 ):Parcelable

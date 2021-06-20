@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            app:cardBackgroundColor="@color/colorGrey50"
+            app:cardBackgroundColor="@color/white"
             app:contentPadding="5dp">
 
             <LinearLayout

@@ -83,7 +83,9 @@ data class NetworkMyCourse(
         @Json(name="description")
         val courseDescription : String,
         @Json(name="price")
-        val coursePrice : Float
+        val coursePrice : Float,
+        @Json(name="photo_url")
+        val coursePhoto : String
 )
 
 
@@ -98,9 +100,9 @@ data class NetworkCourse(
         @Json(name="price")
         val coursePrice : Float,
         @Json(name="lessons")
-        val courseLessons : List<NetworkLesson2>
-//        @Json(name="photo_url")
-//        val photoUrl : String,
+        val courseLessons : List<NetworkLesson2>,
+        @Json(name="photo_url")
+        val photoUrl : String
 //        @Json(name="status")
 //        val availabilityStatus : String
 )
@@ -152,18 +154,7 @@ fun NetworkQuizContainer.asDomainModel(): Quiz {
 }
 
 
-fun NetworkVocabContainer.asDatabaseModel(): List<DatabaseVocab> {//Todo: Remove this later
-    return data.map {
-        DatabaseVocab(
-            vocabId = it.vocabId,
-            lessonId = 0,
-            word = it.word,
-            syn = it.syn,
-            def = it.def,
-            ex1 = it.ex1,
-            ex2 = it.ex2)
-    }
-}
+
 
 fun NetworkVocabContainer.asDomainModel(): List<Vocab> {
     return data.map {
@@ -218,7 +209,7 @@ fun NetworkMyCoursesContainer.asDomainModel(): List<Course> {
                 it.courseId,
                 it.courseTitle,
                 it.courseDescription,
-                "https://i.imgur.com/JI9hOki.jpg",//Todo: update this when course photo is implemented in backened
+                it.coursePhoto,
                 it.coursePrice,
                 null
         )
@@ -234,7 +225,7 @@ fun NetworkCoursesContainer.asDomainModel(): List<Course> {
                 it.courseId,
                 it.courseTitle,
                 it.courseDescription,
-                "https://i.imgur.com/JI9hOki.jpg",//Todo: update this when course photo is implemented in backened
+                it.photoUrl,
                 it.coursePrice,
                 it.courseLessons.map { lesson->
                     GeneralLesson(lesson.lessonId,lesson.lessonTitle)

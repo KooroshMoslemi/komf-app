@@ -9,9 +9,11 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.IdRes
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.mvp2.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -55,7 +57,24 @@ fun NavController.doIfCurrentDestination(@IdRes destination: Int, action: NavCon
 fun ImageView.setLocalImage(uri: Uri, applyCircle: Boolean = false) {
     val glide = Glide.with(this).load(uri)
     if (applyCircle) {
-        glide.apply(RequestOptions.circleCropTransform()).into(this)
+        glide.apply(
+                RequestOptions.circleCropTransform()
+                        .placeholder(resources.getDrawable(R.mipmap.default_profile))
+                        .error(resources.getDrawable(R.mipmap.default_profile))
+        ).into(this)
+    } else {
+        glide.into(this)
+    }
+}
+
+fun ImageView.setLocalImage(url: String, applyCircle: Boolean = false) {
+    val glide = Glide.with(this).load(url.toUri())
+    if (applyCircle) {
+        glide.apply(
+                RequestOptions.circleCropTransform()
+                        .placeholder(resources.getDrawable(R.mipmap.default_profile))
+                        .error(resources.getDrawable(R.mipmap.default_profile))
+        ).into(this)
     } else {
         glide.into(this)
     }

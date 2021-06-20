@@ -20,7 +20,9 @@ package com.example.mvp2.network
 import com.example.mvp2.domain.*
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
@@ -47,10 +49,16 @@ interface Service {
             @Body request: QuizRequest
     ): Deferred<NetworkQuizContainer>
 
-    @GET("api/courses")
+    @GET("api/user")
     fun verifyToken(
             @Header("Authorization") authToken: String
-    ): Deferred<GeneralResponse>
+    ): Deferred<VerifyResponse>
+
+    @POST("api/user/UpdateUser")
+    fun updateUser(
+            @Header("Authorization") authToken: String,
+            @Body request: UpdateUserRequest
+    ): Deferred<VerifyResponse>
 
     @GET("api/user/courses")
     fun getMyCourses(
@@ -96,6 +104,20 @@ interface Service {
     fun changePassword(
         @Header("Authorization") authToken: String,
         @Body request: ChangePasswordRequest
+    ): Deferred<GeneralResponse>
+
+
+//    @Multipart
+//    @POST("api/user/ChangeProfile")
+//    fun uploadProfileImage(
+//            @Header("Authorization") authToken: String,
+//            @Part("file") file: MultipartBody.Part
+//    ): Deferred<GeneralResponse>
+
+    @POST("api/user/ChangeProfile")
+    fun uploadProfileImage(
+            @Header("Authorization") authToken: String,
+            @Body file: RequestBody
     ): Deferred<GeneralResponse>
 
 //

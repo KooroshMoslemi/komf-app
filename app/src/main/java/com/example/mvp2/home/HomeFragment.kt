@@ -69,6 +69,9 @@ class HomeFragment : Fragment() {
         binding.setLifecycleOwner(viewLifecycleOwner)
         binding.viewModel = viewModel
 
+        sessionManager.fetchUserFName()?.let { fname->
+            binding.greetingTv.text = "Hello $fname!"
+        }
 
 
         binding.lessonCard.setOnClickListener {
@@ -110,7 +113,7 @@ class HomeFragment : Fragment() {
 
 
         viewModel.courses.observe(viewLifecycleOwner, Observer {
-            it.let {
+            it?.let {
                 Log.e("HomeFragment","user courses updated!")
                 coursePagerAdapter.submitList(it)
             }
@@ -143,7 +146,7 @@ class HomeFragment : Fragment() {
         viewModel.vocabs.observe(viewLifecycleOwner, Observer<List<Vocab>> { vocabs ->
             vocabs?.apply {
                 //Toast.makeText(context,vocabs.size.toString(),Toast.LENGTH_LONG).show()
-                Log.e("vocab_size", vocabs.size.toString())
+                //Log.e("vocab_size", vocabs.size.toString())
             }
         })
     }
